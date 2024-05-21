@@ -1,0 +1,125 @@
+
+<html>
+
+<script>
+
+function numberToName(n,plural = false) {
+    const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei,zehn','vier,zehn','fünf,zehn','sech,zehn','sieb,zehn','acht,zehn','neun,zehn']
+    const dname = ['','','zwanzig','dreißig','vierzig','fünfzig','sechzig','siebzig','achtzig','neunzig']
+    let name
+    if ( n < 20 ) {
+        name = nname[n]
+        if ( n === 1 && plural ) name += 'e'
+    } else {
+        name = dname[Math.floor(n/10)]
+        if ( n % 10 > 0 ) {
+            name = nname[n%10] + ",und," + name
+        }
+    }
+    return name
+}
+
+
+var clockSimu = true
+var mytime = null
+var clockSimuCycle = 0
+
+function clockTime() {
+    if ( clockSimu ) {
+        if ( mytime === null  ) {
+            mytime = new Date('2024T00:00:00')
+        } else {
+            if ( clockSimuCycle++ % 2 === 0 )
+                mytime.setTime(mytime.getTime()+1000*(1+60*(1+60*(1))))
+        }
+    } else {
+        mytime = new Date()
+    }
+    return mytime
+}
+
+function clockSMNumbers(ele) {
+    let mytime = clockTime()
+    let hour = mytime.getHours()
+    let minutes = mytime.getMinutes()
+    ele.innerText = hour + ":" + minutes
+}
+
+Object.defineProperty(String.prototype, 'capitalize', {
+  value: function() {
+    return this
+    // return this.charAt(0).toUpperCase() + this.slice(1);
+  },
+  enumerable: false
+});
+
+function clockSMText1(ele) {
+    let mytime = clockTime()
+    let hour = mytime.getHours()
+    let minutes = mytime.getMinutes()
+    let mText = " " + numberToName(minutes,true).capitalize() + " Minute"
+    switch ( minutes ) {
+        case 0 : mText = '' ; break
+        case 1 : mText = " und" + mText ; break
+        default : mText += "n"
+    }
+    return numberToName(hour).capitalize() + " Uhr" + mText
+}
+
+function clockSMText(ele) {
+    let mytime = clockTime()
+    let hour = mytime.getHours() % 12
+    let minutes = mytime.getMinutes()
+    let mText
+    switch ( minutes ) {
+        case 15 : mText = "viertel "     + numberToName((hour+1)%12) ; break
+        case 30 : mText = "halb "        + numberToName((hour+1)%12) ; break
+        case 45 : mText = "dreiviertel " + numberToName((hour+1)%12) ; break
+        case 0  : mText = numberToName(hour) + " Uhr"                 ; break
+        case 1  : mText = numberToName(hour) + " Uhr und eine Minute" ; break
+        default : mText = numberToName(hour) + " Uhr " + numberToName(minutes,true) ; break
+    }
+    return mText
+}
+
+function clockStundenMinuten(ele) {
+    ele.innerText = clockSMText().replaceAll(',','')
+}
+
+function clockUpdate() {
+    for ( ele of document.querySelectorAll('[clockelement]')) {
+        let type = ele.getAttribute('clockelement')
+        switch ( type ) {
+            case 'StundeMinuten' : clockStundenMinuten(ele) ; break ;
+        }
+    }
+  
+}
+
+function clockInit() {
+    setInterval(clockUpdate,1000)
+}
+
+document.addEventListener("DOMContentLoaded", clockInit)
+
+</script>
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 45px;
+        margin : 5vw;
+    }
+    .buttons {
+        margin-bottom : 50vh;
+    }
+</style>
+<body>
+Es ist
+<span clockelement="StundeMinuten"/></span>
+<div class="buttons">
+    <H4 style="padding:30px">Clock Simu</H4>
+    <button onclick="clockSimu=true">Clock Simu on</button>
+    <button onclick="clockSimu=false">Clock Simu off</button>
+</div>
+</body>
+</html>
