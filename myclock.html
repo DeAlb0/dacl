@@ -36,7 +36,7 @@ function clockTime() {
         if ( mytime === null  ) {
             mytime = new Date('2024T00:00:00')
         } else {
-            if ( clockSimuCycle++ % 4 === 0 )
+            if ( clockSimuCycle++ % 1 === 0 )
                 mytime.setTime(mytime.getTime()+1000*(1+60*(1+60*(1))))
         }
     } else {
@@ -90,17 +90,21 @@ function clockSMText(ele) {
 }
 
 function clockStundenMinuten1(ele) {
-    ele.innerText = clockSMText().replaceAll(',','')
+    ele.innerText = clockSMText().replaceAll(',-','')
 }
 
 function clockStundenMinuten(ele) {
-    let textA = clockSMText().split(/[ ,]/g)
+    let textA = clockSMText().split(/[ ]/g)
     let counter = 0
-    for ( oldies of ele.querySelectorAll('.outdated')) {
+    for ( oldies of ele.querySelectorAll('.outdated,.vanish')) {
         oldies.remove()
     }
+    oldEle = []
+    for ( oele of ele.childNodes ) {
+        oldEle.push(oele)
+    }
     for ( tfield of textA ) {
-        oele = ele.childNodes[counter]
+        oele = oldEle[counter]
         if ( oele && oele.innerText === tfield ) {
             oele.classList.add('unchanged')
         } else {
@@ -117,6 +121,9 @@ function clockStundenMinuten(ele) {
             }
         }
         counter++
+    }
+    while ( oele = oldEle[counter++] ) {
+        oele.classList.add('vanish')
     }
 }
 
@@ -146,9 +153,24 @@ document.addEventListener("DOMContentLoaded", clockInit)
     .buttons {
         margin-bottom : 50vh;
     }
-    .outdated { background-color: red;}
+    .cswitcher {
+        transition: all 1s ;
+        position: relative;
+        top: -2em;
+    }
+    :not(.outdated) {
+        top: -1em;
+    }
+    .outdated {
+        background-color: red;
+        top: 2em;
+    }
+    .vanish {
+        background-color: grey;
+        top: 2em;
+    }
     .cswitcher { padding : 10px }
-    .cswitch0 { background-color: aqua ;}
+    /* .cswitch0 { background-color: aqua ;} */
 </style>
 <body>
 Es ist
