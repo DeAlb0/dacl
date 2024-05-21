@@ -23,13 +23,20 @@ function numberToName(n,plural = false) {
 var clockSimu = true
 var mytime = null
 var clockSimuCycle = 0
+if ( clockSimu ) {
+    ClkUpdateTime = 4000
+} else {
+    ClkUpdateTime = 1000
+}
+
+
 
 function clockTime() {
     if ( clockSimu ) {
         if ( mytime === null  ) {
             mytime = new Date('2024T00:00:00')
         } else {
-            if ( clockSimuCycle++ % 2 === 0 )
+            if ( clockSimuCycle++ % 4 === 0 )
                 mytime.setTime(mytime.getTime()+1000*(1+60*(1+60*(1))))
         }
     } else {
@@ -82,8 +89,35 @@ function clockSMText(ele) {
     return mText
 }
 
-function clockStundenMinuten(ele) {
+function clockStundenMinuten1(ele) {
     ele.innerText = clockSMText().replaceAll(',','')
+}
+
+function clockStundenMinuten(ele) {
+    let textA = clockSMText().split(/[ ,]/g)
+    let counter = 0
+    for ( oldies of ele.querySelectorAll('.outdated')) {
+        oldies.remove()
+    }
+    for ( tfield of textA ) {
+        oele = ele.childNodes[counter]
+        if ( oele && oele.innerText === tfield ) {
+            oele.classList.add('unchanged')
+        } else {
+            if ( oele ) {
+                oele.classList.add('outdated')
+            }
+            nele = document.createElement('span')
+            nele.className = `cswitcher cswitch${counter}`
+            nele.innerText = tfield
+            if ( oele ) {
+                oele.after(nele)
+            } else {
+                ele.appendChild(nele)
+            }
+        }
+        counter++
+    }
 }
 
 function clockUpdate() {
@@ -97,7 +131,7 @@ function clockUpdate() {
 }
 
 function clockInit() {
-    setInterval(clockUpdate,1000)
+    setInterval(clockUpdate,ClkUpdateTime)
 }
 
 document.addEventListener("DOMContentLoaded", clockInit)
@@ -112,6 +146,9 @@ document.addEventListener("DOMContentLoaded", clockInit)
     .buttons {
         margin-bottom : 50vh;
     }
+    .outdated { background-color: red;}
+    .cswitcher { padding : 10px }
+    .cswitch0 { background-color: aqua ;}
 </style>
 <body>
 Es ist
