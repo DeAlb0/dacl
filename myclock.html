@@ -37,7 +37,7 @@ function clockTime() {
             mytime = new Date('2024T00:00:00')
         } else {
             if ( clockSimuCycle++ % 1 === 0 )
-                mytime.setTime(mytime.getTime()+1000*(1+60*(1+60*(1))))
+                mytime.setTime(mytime.getTime()+1000*(1+60*(13+60*(1))))
         }
     } else {
         mytime = new Date()
@@ -84,7 +84,13 @@ function clockSMText(ele) {
         case 45 : mText = "dreiviertel " + numberToName((hour+1)%12) ; break
         case 0  : mText = numberToName(hour) + " Uhr"                 ; break
         case 1  : mText = numberToName(hour) + " Uhr und eine Minute" ; break
-        default : mText = numberToName(hour) + " Uhr " + numberToName(minutes,true) ; break
+        case 59 : mText = "eine Minute vor " + numberToName(hour) ; break
+        default : 
+            if ( minutes <= 40 ) {
+                mText = numberToName(hour) + " Uhr " + numberToName(minutes,true) ; break
+            } else {
+                mText = numberToName(60-minutes,true) + " vor " + numberToName(hour) ; break
+            }
     }
     return mText
 }
