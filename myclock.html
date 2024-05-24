@@ -3,13 +3,13 @@
 
 <script>
 
-function numberToName(n,plural = false) {
+function numberToName(n,plural = "") {
     const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei,zehn','vier,zehn','fünf,zehn','sech,zehn','sieb,zehn','acht,zehn','neun,zehn']
     const dname = ['','','zwanzig','dreißig','vierzig','fünfzig','sechzig','siebzig','achtzig','neunzig']
     let name
     if ( n < 20 ) {
         name = nname[n]
-        if ( n === 1 && plural ) name += 'e'
+        if ( n === 1 ) name += plural
     } else {
         name = dname[Math.floor(n/10)]
         if ( n % 10 > 0 ) {
@@ -24,7 +24,7 @@ var clockSimu = true
 var mytime = null
 var clockSimuCycle = 0
 if ( clockSimu ) {
-    ClkUpdateTime = 4000
+    ClkUpdateTime = 1000
 } else {
     ClkUpdateTime = 1000
 }
@@ -49,7 +49,7 @@ function clockSMNumbers(ele) {
     let mytime = clockTime()
     let hour = mytime.getHours()
     let minutes = mytime.getMinutes()
-    ele.innerText = hour + ":" + minutes
+    ele.innerText = String(hour).padStart(2,'0') + ":" + String(minutes).padStart(2,'0')
 }
 
 Object.defineProperty(String.prototype, 'capitalize', {
@@ -64,7 +64,7 @@ function clockSMText1(ele) {
     let mytime = clockTime()
     let hour = mytime.getHours()
     let minutes = mytime.getMinutes()
-    let mText = " " + numberToName(minutes,true).capitalize() + " Minute"
+    let mText = " " + numberToName(minutes,"e").capitalize() + " Minute"
     switch ( minutes ) {
         case 0 : mText = '' ; break
         case 1 : mText = " und" + mText ; break
@@ -75,22 +75,30 @@ function clockSMText1(ele) {
 
 function clockSMText(ele) {
     let mytime = clockTime()
-    let hour = mytime.getHours() % 12
+    let hour = mytime.getHours()
     let minutes = mytime.getMinutes()
     let mText
+    function hourHere(offset=0) {
+        if ( offset === 0 && hour === 12 ) {
+            return "|" + numberToName(12) + "|"
+        } else {
+            return "|" + numberToName(hour%12+offset,offset?'s':'') + "|"
+        }
+    }
     switch ( minutes ) {
-        case 15 : mText = "viertel "     + numberToName((hour+1)%12) ; break
-        case 30 : mText = "halb "        + numberToName((hour+1)%12) ; break
-        case 45 : mText = "dreiviertel " + numberToName((hour+1)%12) ; break
-        case 0  : mText = numberToName(hour) + " Uhr"                 ; break
-        case 1  : mText = numberToName(hour) + " Uhr und eine Minute" ; break
-        case 59 : mText = "eine Minute vor " + numberToName(hour) ; break
+        case 15 : mText = "viertel "     + hourHere(1) ; break
+        case 30 : mText = "halb "        + hourHere(1) ; break
+        case 45 : mText = "dreiviertel " + hourHere(1) ; break
+        case 0  : mText = hourHere() + " Uhr"                 ; break
+        case 1  : mText = hourHere() + " Uhr und eine Minute" ; break
+        case 59 : mText = "eine Minute vor " + hourHere(1) ; break
         default : 
             if ( minutes <= 40 ) {
-                mText = numberToName(hour) + " Uhr " + numberToName(minutes,true) ; break
+                mText = hourHere() + " Uhr " + numberToName(minutes,"s")
             } else {
-                mText = numberToName(60-minutes,true) + " vor " + numberToName(hour) ; break
+                mText = numberToName(60-minutes,"e") + " vor " + hourHere(1)
             }
+            break
     }
     return mText
 }
@@ -99,37 +107,82 @@ function clockStundenMinuten1(ele) {
     ele.innerText = clockSMText().replaceAll(',-','')
 }
 
-function clockStundenMinuten(ele) {
-    let textA = clockSMText().split(/[ ]/g)
-    let counter = 0
+function clockStundenMinuten(mele) {
+    let textA = clockSMText().split(/\|/g)
+    for ( oldies of ele.querySelectorAll('.unused')) {
+        oldies.classList.remove('unused')
+        oldies.classList.add('free')
+    }
     for ( oldies of ele.querySelectorAll('.outdated,.vanish')) {
-        oldies.remove()
+        oldies.classList.remove('outdated')
+        oldies.classList.remove('vanish')
+        oldies.classList.add('unused')
+        oldies.innerText = ''
     }
-    oldEle = []
-    for ( oele of ele.childNodes ) {
-        oldEle.push(oele)
-    }
-    for ( tfield of textA ) {
-        oele = oldEle[counter]
-        if ( oele && oele.innerText === tfield ) {
-            oele.classList.add('unchanged')
-        } else {
-            if ( oele ) {
-                oele.classList.add('outdated')
-            }
-            nele = document.createElement('span')
-            nele.className = `cswitcher cswitch${counter}`
-            nele.innerText = tfield
-            if ( oele ) {
-                oele.after(nele)
-            } else {
-                ele.appendChild(nele)
+    for ( segnr = 0 ; segnr < 3 ; segnr++ ) {
+        segment = textA[segnr] ?? ''
+        ele = mele.childNodes[segnr]
+        if ( ele === undefined ) {
+            ele = document.createElement('div')
+            ele.className = `ccontainer ccontainer${segnr}`
+            mele.appendChild(ele)
+            for ( i = 0 ; i < 4 ; i++ ) {
+                sele = document.createElement('div')
+                sele.className = `cword cword${i}`
+                ele.appendChild(sele)
+                for ( j = 0 ; j < 3 ; j++ ) {
+                    vele = document.createElement('div')
+                    vele.className = `cval cval${j} free`
+                    sele.appendChild(vele)
+                }
+                vele = document.createElement('span')
+                vele.className = `cvalp`
+                sele.appendChild(vele)
             }
         }
-        counter++
-    }
-    while ( oele = oldEle[counter++] ) {
-        oele.classList.add('vanish')
+        // for ( segment of textA ) {
+        oldEle = []
+        for ( oele of ele.childNodes ) {
+            oldEle.push(oele)
+        }
+        let counter = 0
+        for ( tfield of segment.trim().split(/[ ]/) ) {
+            oele = oldEle[counter]
+            olatest = oele?.querySelector('.latest')
+            if ( olatest && olatest.innerText === tfield ) {
+                olatest.classList.add('unchanged')
+            } else {
+                if ( olatest ) {
+                    olatest.classList.add('outdated')
+                    olatest.classList.remove('latest')
+                    olatest.classList.remove('unchanged')
+                }
+                nele = oele.querySelector('.free')
+                if ( nele !== null ) {
+                    nele.classList.remove('free')
+                    nele.classList.add('latest')
+                }
+                if ( false && nele === null ) {
+                    nele = document.createElement('span')
+                    nele.className = `cswitcher cswitch${counter}`
+                    if ( oele ) {
+                        oele.after(nele)
+                    } else {
+                        ele.appendChild(nele)
+                    }
+                }
+                if ( nele === null ) {
+                    console.log('nele null')
+                }
+                nele.innerText = tfield
+            }
+            counter++
+        }
+        while ( oele = oldEle[counter++] ) {
+            olatest = oele?.querySelector('.latest')
+            olatest?.classList.add('vanish')
+            olatest?.classList.remove('latest')
+        }
     }
 }
 
@@ -138,6 +191,7 @@ function clockUpdate() {
         let type = ele.getAttribute('clockelement')
         switch ( type ) {
             case 'StundeMinuten' : clockStundenMinuten(ele) ; break ;
+            case 'Numbers' : clockSMNumbers(ele) ; break ;
         }
     }
   
@@ -159,28 +213,65 @@ document.addEventListener("DOMContentLoaded", clockInit)
     .buttons {
         margin-bottom : 50vh;
     }
-    .cswitcher {
-        transition: all 1s ;
+    [clockelement] {
+        display : flex;
+        flex-direction: row;
+    }
+    .cword {
         position: relative;
+        min-width: 300px;
+        display: block;
+    }
+    .cval {
+        transition: all 1s ;
+        position: absolute;
+        top: 0em;
+    }
+    .cvalp {
+        min-width: 30px;
+        display: block;
+    }
+    /* .cval:not(.outdated) {
+        top: -1em;
+    } */
+    .cval.free {
         top: -2em;
     }
-    :not(.outdated) {
-        top: -1em;
-    }
-    .outdated {
-        background-color: red;
+    .outdated,.vanish {
+        color: lightgrey;
         top: 2em;
     }
-    .vanish {
-        background-color: grey;
-        top: 2em;
+    .free {
+        color: lightgrey;
+    }
+    .unused {
+        display: none;
     }
     .cswitcher { padding : 10px }
+    /* helper as the words are not distributed horizontally */
+    .cword1 .cval {
+        left: 100px;
+    }
+    .cword2 .cval {
+        left: 200px;
+    }
+    .ccontainer0 {
+        min-width:500px;
+    }
+    .ccontainer0 .cword1 .cval {
+        left: 300px;
+    }
+    .ccontainer0 .cword2 .cval {
+        left: 400px;
+    }
+
     /* .cswitch0 { background-color: aqua ;} */
 </style>
 <body>
 Es ist
-<span clockelement="StundeMinuten"/></span>
+<div clockelement="Numbers"/></div>
+<div clockelement="StundeMinuten"/></div>
+<br><br><br><br><br><br>
 <div class="buttons">
     <H4 style="padding:30px">Clock Simu</H4>
     <button onclick="clockSimu=true">Clock Simu on</button>
