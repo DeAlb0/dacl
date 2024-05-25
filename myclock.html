@@ -92,7 +92,7 @@ function clockSMText(ele) {
         case 59 : mText = "eine Minute vor " + hourHere(1) ; break
         case 15 : mText = "viertel "         + hourHere(1) ; break
         case 30 : mText = "halb "            + hourHere(1) ; break
-        case 45 : mText = "dreiviertel "     + hourHere(1) ; break
+        case 45 : mText = "drei,viertel "    + hourHere(1) ; break
         default : 
             if ( minutes <= 40 ) {
                 mText = hourHere() + " Uhr " + numberToName(minutes,"s")
@@ -231,6 +231,9 @@ document.addEventListener("DOMContentLoaded", clockInit)
     .outdated {
         color: white;
         top: 2em;
+    }
+    .latest.unchanged {
+        color: grey;
     }
     .vanish {
         color: white;
