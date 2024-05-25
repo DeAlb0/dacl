@@ -85,12 +85,12 @@ function clockSMText(ele) {
         return "|" + numberToName(hour,offset?'s':'') + "|"
     }
     switch ( minutes ) {
-        case 15 : mText = "viertel "     + hourHere(1) ; break
-        case 30 : mText = "halb "        + hourHere(1) ; break
-        case 45 : mText = "dreiviertel " + hourHere(1) ; break
         case 0  : mText = hourHere() + " Uhr"                 ; break
         case 1  : mText = hourHere() + " Uhr und eine Minute" ; break
         case 59 : mText = "eine Minute vor " + hourHere(1) ; break
+        case 15 : mText = "viertel "         + hourHere(1) ; break
+        case 30 : mText = "halb "            + hourHere(1) ; break
+        case 45 : mText = "dreiviertel "     + hourHere(1) ; break
         default : 
             if ( minutes <= 40 ) {
                 mText = hourHere() + " Uhr " + numberToName(minutes,"s")
