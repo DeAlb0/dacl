@@ -37,7 +37,7 @@ function clockTime() {
             mytime = new Date('2024T00:00:00')
         } else {
             if ( clockSimuCycle++ % 1 === 0 )
-                mytime.setTime(mytime.getTime()+1000*(1+60*(13+60*(1))))
+                mytime.setTime(mytime.getTime()+1000*(0+60*(1+60*(0))))
         }
     } else {
         mytime = new Date()
@@ -75,15 +75,14 @@ function clockSMText1(ele) {
 
 function clockSMText(ele) {
     let mytime = clockTime()
-    let hour = mytime.getHours()
     let minutes = mytime.getMinutes()
     let mText
     function hourHere(offset=0) {
-        if ( offset === 0 && hour === 12 ) {
-            return "|" + numberToName(12) + "|"
-        } else {
-            return "|" + numberToName(hour%12+offset,offset?'s':'') + "|"
+        let hour = mytime.getHours()
+        if ( offset !== 0 && hour >  12 ) {
+            hour = hour % 12 + offset
         }
+        return "|" + numberToName(hour,offset?'s':'') + "|"
     }
     switch ( minutes ) {
         case 15 : mText = "viertel "     + hourHere(1) ; break
@@ -264,13 +263,16 @@ document.addEventListener("DOMContentLoaded", clockInit)
     .ccontainer0 .cword2 .cval {
         left: 400px;
     }
+    [clockelement="StundeMinuten"] {
+        margin : 2em;
+    }
 
     /* .cswitch0 { background-color: aqua ;} */
 </style>
 <body>
 Es ist
-<div clockelement="Numbers"/></div>
-<div clockelement="StundeMinuten"/></div>
+<div clockelement="Numbers"></div>
+<div clockelement="StundeMinuten"></div>
 <br><br><br><br><br><br>
 <div class="buttons">
     <H4 style="padding:30px">Clock Simu</H4>
