@@ -218,16 +218,6 @@ document.addEventListener("DOMContentLoaded", clockInit)
         position: absolute;
         top: 0em;
     }
-    .cvalp {
-        min-width: 30px;
-        display: block;
-    }
-    /* .cval:not(.outdated) {
-        top: -1em;
-    } */
-    .cval.free {
-        top: -2em;
-    }
     .outdated {
         color: white;
         top: 2em;
@@ -240,10 +230,14 @@ document.addEventListener("DOMContentLoaded", clockInit)
         top: -2em;
     }
     .free {
-        color: lightgrey;
+        color: white;
+        top: -2em;
     }
     .ccontainer {
         display: flex
+    }
+    .cright {
+        right: 01.em;
     }
     [clockelement="StundeMinuten"] {
         margin : 2em;
