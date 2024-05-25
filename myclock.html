@@ -110,16 +110,7 @@ function clockStundenMinuten1(ele) {
 
 function clockStundenMinuten(mele) {
     let textA = clockSMText().split(/\|/g)
-    for ( oldies of ele.querySelectorAll('.unused')) {
-        oldies.classList.remove('unused')
-        oldies.classList.add('free')
-    }
-    for ( oldies of ele.querySelectorAll('.outdated,.vanish')) {
-        oldies.classList.remove('outdated')
-        oldies.classList.remove('vanish')
-        oldies.classList.add('unused')
-        oldies.innerText = ''
-    }
+    let allOldies = [...ele.querySelectorAll('.outdated,.vanish')]
     for ( segnr = 0 ; segnr < 3 ; segnr++ ) {
         segment = textA[segnr] ?? ''
         ele = mele.childNodes[segnr]
@@ -185,6 +176,12 @@ function clockStundenMinuten(mele) {
             olatest?.classList.remove('latest')
         }
     }
+    for ( oldy of allOldies ) {
+        oldy.classList.remove('outdated')
+        oldy.classList.remove('vanish')
+        oldy.classList.add('free')
+        oldy.innerText = ''
+    }
 }
 
 function clockUpdate() {
@@ -246,9 +243,6 @@ document.addEventListener("DOMContentLoaded", clockInit)
     .free {
         color: lightgrey;
     }
-    .unused {
-        display: none;
-    }
     .cswitcher { padding : 10px }
     /* helper as the words are not distributed horizontally */
     .cword1 .cval {
@@ -256,6 +250,9 @@ document.addEventListener("DOMContentLoaded", clockInit)
     }
     .cword2 .cval {
         left: 200px;
+    }
+    .cword3 .cval {
+        left: 300px;
     }
     .ccontainer0 {
         min-width:500px;
