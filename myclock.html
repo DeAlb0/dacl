@@ -138,7 +138,7 @@ function clockStundenMinuten(mele) {
             oldEle.push(oele)
         }
         let counter = 0
-        for ( tfield of segment.trim().split(/[ ]/) ) {
+        for ( tfield of segment.trim().split(/[ ,]/) ) {
             oele = oldEle[counter]
             olatest = oele?.querySelector('.latest')
             if ( olatest && olatest.innerText === tfield ) {
