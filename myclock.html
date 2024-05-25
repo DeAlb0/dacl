@@ -155,8 +155,9 @@ function clockStundenMinuten(mele) {
                     console.log('nele null')
                 }
                 nele.innerText = tfield
-                if ( nele.clientWidth > nele.parentNode.clientWidth ) {
-                    nele.parentNode.style.minWidth = nele.clientWidth + 5
+                const wPad = 10
+                if ( nele.clientWidth + wPad > nele.parentNode.clientWidth ) {
+                    nele.parentNode.style.minWidth = nele.clientWidth + wPad
                 }
             }
             counter++
