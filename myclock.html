@@ -1,19 +1,22 @@
 
 <html>
-
+<meta charset="utf-8" />
 <script>
 
 function numberToName(n,plural = "") {
-    const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei,zehn','vier,zehn','fünf,zehn','sech,zehn','sieb,zehn','acht,zehn','neun,zehn']
+    const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei','vier','fünf','sech','sieb','acht','neun']
     const dname = ['','','zwanzig','dreißig','vierzig','fünfzig','sechzig','siebzig','achtzig','neunzig']
+    const tenpostfix = "-zehn"
+    const tenLimit = 12
     let name
     if ( n < 20 ) {
         name = nname[n]
+        if ( n > tenLimit ) name += tenpostfix
         if ( n === 1 ) name += plural
     } else {
         name = dname[Math.floor(n/10)]
         if ( n % 10 > 0 ) {
-            name = nname[n%10] + ",und," + name
+            name = nname[n%10] + "-und-" + name
         }
     }
     return name
@@ -92,7 +95,7 @@ function clockSMText(ele) {
         case 59 : mText = "eine Minute vor " + hourHere(1) ; break
         case 15 : mText = "viertel "         + hourHere(1) ; break
         case 30 : mText = "halb "            + hourHere(1) ; break
-        case 45 : mText = "drei,viertel "    + hourHere(1) ; break
+        case 45 : mText = "drei-viertel "    + hourHere(1) ; break
         default : 
             if ( minutes <= 40 ) {
                 mText = hourHere() + " Uhr " + numberToName(minutes,"s")
@@ -135,7 +138,8 @@ function clockStundenMinuten(mele) {
             oldEle.push(oele)
         }
         let counter = 0
-        for ( tfield of segment.trim().split(/[ ,]/) ) {
+        for ( tstring of segment.trim().replace(/-/g,'- -').split(/ /) ) {
+            const tfield = tstring.replace(/-/g,'')
             oele = oldEle[counter]
             olatest = oele?.querySelector('.latest')
             if ( olatest && olatest.innerText === tfield ) {
@@ -147,14 +151,11 @@ function clockStundenMinuten(mele) {
                     olatest.classList.remove('unchanged')
                 }
                 nele = oele.querySelector('.free')
-                if ( nele !== null ) {
-                    nele.classList.remove('free')
-                    nele.classList.add('latest')
-                }
-                if ( nele === null ) {
-                    console.log('nele null')
-                }
+                nele.classList.remove('free')
+                nele.classList.add('latest')
                 nele.innerText = tfield
+                nele.classList.toggle('cbindleft',/^-/.test(tstring))
+                nele.classList.toggle('cbindright',/-$/.test(tstring))
                 const wPad = 10
                 if ( nele.clientWidth + wPad > nele.parentNode.clientWidth ) {
                     nele.parentNode.style.minWidth = nele.clientWidth + wPad
@@ -213,6 +214,7 @@ document.addEventListener("DOMContentLoaded", clockInit)
         min-width: 100px;
         display: block;
     }
+    /* TODO: .cword>div {  does for some straaaange reason not work for the animation of top */
     .cval {
         transition: all 0.8s ;
         position: absolute;
@@ -236,8 +238,11 @@ document.addEventListener("DOMContentLoaded", clockInit)
     .ccontainer {
         display: flex
     }
-    .cright {
-        right: 01.em;
+    .cbindright {
+        right: 0.1em;
+    }
+    .cbindleft.cbindright {
+        right: 0.3em;
     }
     [clockelement="StundeMinuten"] {
         margin : 2em;
