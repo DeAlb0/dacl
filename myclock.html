@@ -134,38 +134,37 @@ function clockStundenMinuten(mele) {
                 }
             }
         }
-        oldEle = []  // TODO: not required, direct access to childNodes can be used later
-        for ( oele of ele.childNodes ) {
-            oldEle.push(oele)
-        }
         let counter = 0
-        // TODO: handle empty tstring
-        for ( tstring of segment.trim().replace(/-/g,'- -').split(/ /) ) {
-            const tfield = tstring.replace(/-/g,'')
-            oele = oldEle[counter]
-            olatest = oele?.querySelector('.latest')
-            if ( olatest && olatest.innerText === tfield ) {
-                olatest.classList.add('unchanged')
-            } else {
-                if ( olatest ) {
-                    olatest.classList.add('outdated')
-                    olatest.classList.remove('latest')
-                    olatest.classList.remove('unchanged')
+        if ( segment !== '' ) {
+            for ( tstring of segment.trim().replace(/-/g,'- -').split(/ /) ) {
+                const tfield = tstring.replace(/-/g,'')
+                oele = ele.childNodes[counter]
+                olatest = oele?.querySelector('.latest')
+                if ( olatest && olatest.innerText === tfield ) {
+                    olatest.classList.add('unchanged')
+                } else {
+                    if ( olatest ) {
+                        olatest.classList.add('outdated')
+                        olatest.classList.remove('latest')
+                        olatest.classList.remove('unchanged')
+                    }
+                    if ( tfield !== '' ) {
+                        nele = oele.querySelector('.free')
+                        nele.classList.remove('free')
+                        nele.classList.add('latest')
+                        nele.innerText = tfield
+                        nele.classList.toggle('cbindleft',/^-/.test(tstring))
+                        nele.classList.toggle('cbindright',/-$/.test(tstring))
+                        const wPad = 10
+                        if ( nele.clientWidth + wPad > nele.parentNode.clientWidth ) {
+                            nele.parentNode.style.minWidth = nele.clientWidth + wPad
+                        }
+                    }
                 }
-                nele = oele.querySelector('.free')
-                nele.classList.remove('free')
-                nele.classList.add('latest')
-                nele.innerText = tfield
-                nele.classList.toggle('cbindleft',/^-/.test(tstring))
-                nele.classList.toggle('cbindright',/-$/.test(tstring))
-                const wPad = 10
-                if ( nele.clientWidth + wPad > nele.parentNode.clientWidth ) {
-                    nele.parentNode.style.minWidth = nele.clientWidth + wPad
-                }
+                counter++
             }
-            counter++
         }
-        while ( oele = oldEle[counter++] ) {
+        while ( oele = ele.childNodes[counter++] ) {
             olatest = oele?.querySelector('.latest')
             olatest?.classList.add('vanish')
             olatest?.classList.remove('latest')
@@ -188,7 +187,6 @@ function clockUpdate() {
             case 'Numbers'       : clockSMNumbers(ele)      ; break ;
         }
     }
-  
 }
 
 function clockInit() {
