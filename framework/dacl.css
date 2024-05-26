@@ -11,7 +11,7 @@
     display: block;
 }
 .cval {
-    transition: all 0.8s ;
+    transition: all 1.8s ;
     position: absolute;
     top: 0em;
 }
