@@ -17,6 +17,8 @@ function numberToName(n,plural = "") {
         name = dname[Math.floor(n/10)]
         if ( n % 10 > 0 ) {
             name = nname[n%10] + "-und-" + name
+        } else {
+            name = "  " + name  // add blanks to bring then tenth name on the same position
         }
     }
     return name
