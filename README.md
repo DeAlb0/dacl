@@ -10,4 +10,5 @@ It is implemented in javascript and uses html and css. So all you have to do to 
 
 At current stage it uses german words only, but is made with the idea that it can be extend for other languages, but details how this can be ported need to be worked out.
 
-This is currently licensed under the quite restrictive GPLv3. If you want to use it somewhere where GPLv3 would be a problem, talk to me.
+This is currently not licensed, as it is under work. Means I own the rights and do not yet grant other rights than those I am obliged to. I plan to open it.
+If you are interested let me know.
