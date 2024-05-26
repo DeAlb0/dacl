@@ -1,0 +1,35 @@
+[clockelement] {
+    display : flex;
+    flex-direction: row;
+}
+.ccontainer {
+    display: flex
+}
+.cword {
+    position: relative;
+    min-width: 100px;
+    display: block;
+}
+.cval {
+    transition: all 0.8s ;
+    position: absolute;
+    top: 0em;
+}
+.cval.outdated,.cval.vanish,.cval.free {
+    color:transparent;
+    border-color: transparent;
+    background-color: transparent;
+}
+.cval.outdated { top:  2em; }
+.cval.vanish   { top: -2em; }
+.cval.free     { top: -2em; }
+.cval.free {
+    visibility:hidden;
+    transition:none;
+}
+.cbindright {
+    right: 0.1em;
+}
+.cbindleft.cbindright {
+    right: 0.3em;
+}

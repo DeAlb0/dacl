@@ -1,0 +1,57 @@
+<!--add this to run it without quirks mode, unfortunately this does yet work as I started in quirks mode and now seem to have dependencies
+   <!DOCTYPE html>
+-->    
+
+<html>
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="../framework/dacl.js"></script>
+<link rel="stylesheet" type="text/css" href="../framework/dacl.css">
+<script>
+clockSimu = true
+var clockSimuCycle = 0
+if ( clockSimu ) {
+    ClkUpdateTime = 1000
+} else {
+    ClkUpdateTime = 1000
+}
+</script>       
+</head>
+<style>
+        .buttons {
+            margin-bottom : 50vh;
+        }
+        /*** individual style example ***/
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin : 5vw;
+            font-size: 45px;
+            background-color: grey;
+        }
+        [clockelement="StundeMinuten"] {
+            font-size: 45px;
+            margin : 2em;
+        }
+        .cval {
+            border-width: 2px;
+            border-color: lightcoral;
+            border-style: solid;
+            border-radius: 0.2em;
+            padding: 0.2em;
+            background-color: bisque;
+        }
+    
+    </style>
+ <body>
+    Es ist
+    <div clockelement="Numbers"></div>
+    <div clockelement="StundeMinuten"></div>
+    <br><br><br><br><br><br>
+    <div class="buttons">
+        <H4 style="padding:30px">Clock Simu</H4>
+        <button onclick="clockSimu=true">Clock Simu on</button>
+        <button onclick="clockSimu=false">Clock Simu off</button>
+    </div>
+ </body>
+ </html>
+    
