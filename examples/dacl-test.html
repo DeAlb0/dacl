@@ -35,6 +35,21 @@ if ( clockSimu ) {
             font-size: 45px;
             margin : 2em;
         }
+        [clockelement="Sekunden"] {
+            font-size: 20px;
+            padding: 4em;
+        }
+        [clockelement="Sekunden"] .cval:is(.latest,.outdated) {
+            transition: 1.2s;
+        }
+        [clockelement="Sekunden"] .cval.latest {
+            background-color: #a0a0a0a0;
+            border-color: #703030;
+            border-width: 1px;
+        }
+        [clockelement="Sekunden"] .cword {        
+            min-width: 50px;
+        }
         .cval {
             border-width: 2px;
             border-color: lightcoral;
@@ -49,6 +64,8 @@ if ( clockSimu ) {
     Es ist
     <div clockelement="Numbers"></div>
     <div clockelement="StundeMinuten"></div>
+    <div clockelement="Sekunden"></div>
+    
     <br><br><br><br><br><br>
     <div class="buttons">
         <H4 style="padding:30px">Clock Simu</H4>

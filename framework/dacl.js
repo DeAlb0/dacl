@@ -104,12 +104,26 @@ function clockSMText(ele) {
     return mText
 }
 
+function clockSekundenText(ele) {
+    let mytime = clockTime()
+    let seconds = mytime.getSeconds()
+    return numberToName(mytime.getSeconds())
+}
+
 function clockStundenMinuten1(ele) {
     ele.innerText = clockSMText().replaceAll(/-/g,'')
 }
 
 function clockStundenMinuten(mele) {
-    let textA = clockSMText().split(/\|/g)
+    clockTextAnimate(mele,clockSMText())
+}
+
+function clockSekunden(mele) {
+    clockTextAnimate(mele,clockSekundenText())
+}
+
+function clockTextAnimate(mele,text) {
+    let textA = text.split(/\|/g)
     let allOldies = [...ele.querySelectorAll('.outdated,.vanish')]
     for ( segnr = 0 ; segnr < 3 ; segnr++ ) {
         segment = textA[segnr] ?? ''
@@ -179,6 +193,7 @@ function clockUpdate() {
         let type = ele.getAttribute('clockelement')
         switch ( type ) {
             case 'StundeMinuten' : clockStundenMinuten(ele) ; break ;
+            case 'Sekunden'      : clockSekunden(ele)       ; break ;
             case 'Numbers'       : clockSMNumbers(ele)      ; break ;
         }
     }

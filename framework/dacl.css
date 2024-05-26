@@ -23,7 +23,7 @@
 .cval.outdated { top:  2em; }
 .cval.vanish   { top: -2em; }
 .cval.free     { top: -2em; }
-.cval.free {
+[clockelement] .cval.free {
     visibility:hidden;
     transition:none;
 }
