@@ -110,7 +110,7 @@ function clockSMText(ele) {
 }
 
 function clockStundenMinuten1(ele) {
-    ele.innerText = clockSMText().replaceAll(',-','')
+    ele.innerText = clockSMText().replaceAll(/-/g,'')
 }
 
 function clockStundenMinuten(mele) {
@@ -134,12 +134,12 @@ function clockStundenMinuten(mele) {
                 }
             }
         }
-        // for ( segment of textA ) {
-        oldEle = []
+        oldEle = []  // TODO: not required, direct access to childNodes can be used later
         for ( oele of ele.childNodes ) {
             oldEle.push(oele)
         }
         let counter = 0
+        // TODO: handle empty tstring
         for ( tstring of segment.trim().replace(/-/g,'- -').split(/ /) ) {
             const tfield = tstring.replace(/-/g,'')
             oele = oldEle[counter]
@@ -199,17 +199,13 @@ document.addEventListener("DOMContentLoaded", clockInit)
 
 </script>
 <style>
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 45px;
-        margin : 5vw;
-    }
-    .buttons {
-        margin-bottom : 50vh;
-    }
+    /**** clock style essentiell style **/
     [clockelement] {
         display : flex;
         flex-direction: row;
+    }
+    .ccontainer {
+        display: flex
     }
     .cword {
         position: relative;
@@ -222,23 +218,18 @@ document.addEventListener("DOMContentLoaded", clockInit)
         position: absolute;
         top: 0em;
     }
-    .outdated {
-        color: white;
-        top: 2em;
+    .cval.outdated,.cval.vanish,.cval.free {
+        color:transparent;
+        border-color: transparent;
+        background-color: transparent;
     }
-    .latest.unchanged {
-        color: grey;
-    }
-    .vanish {
-        color: white;
-        top: -2em;
-    }
-    .free {
-        color: white;
-        top: -2em;
-    }
-    .ccontainer {
-        display: flex
+    .cval.outdated { top:  2em; }
+    .cval.vanish   { top: -2em; }
+    .cval.free     { top: -2em; }
+    .cval.free {
+        visibility:hidden;
+        /* border-color:blue; */
+        transition:none;
     }
     .cbindright {
         right: 0.1em;
@@ -246,9 +237,34 @@ document.addEventListener("DOMContentLoaded", clockInit)
     .cbindleft.cbindright {
         right: 0.3em;
     }
+    /**** clock customizable style ***/
+    .cval.latest.unchanged {
+        color: grey;
+    }
+    /***** only used for testing purpose ***/
+    .buttons {
+        margin-bottom : 50vh;
+    }
+    /*** individual style example ***/
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin : 5vw;
+        font-size: 45px;
+        background-color: grey;
+    }
     [clockelement="StundeMinuten"] {
+        font-size: 45px;
         margin : 2em;
     }
+    .cval {
+        border-width: 2px;
+        border-color: lightcoral;
+        border-style: solid;
+        border-radius: 0.2em;
+        padding: 0.2em;
+        background-color: bisque;
+    }
+
 </style>
 <body>
 Es ist
