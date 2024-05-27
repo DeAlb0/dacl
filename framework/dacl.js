@@ -124,6 +124,7 @@ function clockSekunden(mele) {
 
 function clockTextAnimate(mele,text) {
     let textA = text.split(/\|/g)
+    const preSegments = [4,1,4]
     let allOldies = [...ele.querySelectorAll('.outdated,.vanish')]
     for ( segnr = 0 ; segnr < 3 ; segnr++ ) {
         segment = textA[segnr] ?? ''
@@ -132,7 +133,7 @@ function clockTextAnimate(mele,text) {
             ele = document.createElement('div')
             ele.className = `ccontainer ccontainer${segnr}`
             mele.appendChild(ele)
-            for ( i = 0 ; i < ( segnr === 1 ? 1 : 4) ; i++ ) {
+            for ( i = 0 ; i < preSegments[segnr] ; i++ ) {
                 sele = document.createElement('div')
                 sele.className = `cword cword${i}`
                 ele.appendChild(sele)
@@ -143,40 +144,34 @@ function clockTextAnimate(mele,text) {
                 }
             }
         }
-        let counter = 0
-        if ( segment !== '' ) {
-            for ( tstring of segment.trim().replace(/-/g,'- -').split(/ /) ) {
-                const tfield = tstring.replace(/-/g,'')
-                oele = ele.childNodes[counter]
-                olatest = oele?.querySelector('.latest')
-                if ( olatest && olatest.innerText === tfield ) {
-                    olatest.classList.add('unchanged')
-                } else {
-                    if ( olatest ) {
-                        olatest.classList.add('outdated')
-                        olatest.classList.remove('latest')
-                        olatest.classList.remove('unchanged')
-                    }
-                    if ( tfield !== '' ) {
-                        nele = oele.querySelector('.free')
-                        nele.classList.remove('free')
-                        nele.classList.add('latest')
-                        nele.innerText = tfield
-                        nele.classList.toggle('cbindleft',/^-/.test(tstring))
-                        nele.classList.toggle('cbindright',/-$/.test(tstring))
-                        const wPad = 10
-                        if ( nele.clientWidth + wPad > nele.parentNode.clientWidth ) {
-                            nele.parentNode.style.minWidth = nele.clientWidth + wPad
-                        }
+        words = segment.trim().replace(/-/g,'- -').split(/ /)
+        const nwords = Math.max(words.length,ele.childNodes.length,preSegments[segnr])
+        for ( counter = 0 ; counter < nwords ; counter++ ) {
+            tstring = words[counter + (segnr === 0 ? words.length - nwords : 0)] ?? ''
+            const tfield = tstring.replace(/-/g,'')
+            oele = ele.childNodes[counter]
+            olatest = oele?.querySelector('.latest')
+            if ( olatest && olatest.innerText === tfield ) {
+                olatest.classList.add('unchanged')
+            } else {
+                if ( olatest ) {
+                    olatest.classList.add(tstring === '' ? 'vanish' : 'outdated')
+                    olatest.classList.remove('latest')
+                    olatest.classList.remove('unchanged')
+                }
+                if ( tfield !== '' ) {
+                    nele = oele.querySelector('.free')
+                    nele.classList.remove('free')
+                    nele.classList.add('latest')
+                    nele.innerText = tfield
+                    nele.classList.toggle('cbindleft',/^-/.test(tstring))
+                    nele.classList.toggle('cbindright',/-$/.test(tstring))
+                    const wPad = 10
+                    if ( nele.clientWidth + wPad > nele.parentNode.clientWidth ) {
+                        nele.parentNode.style.minWidth = nele.clientWidth + wPad
                     }
                 }
-                counter++
             }
-        }
-        while ( oele = ele.childNodes[counter++] ) {
-            olatest = oele?.querySelector('.latest')
-            olatest?.classList.add('vanish')
-            olatest?.classList.remove('latest')
         }
     }
     for ( oldy of allOldies ) {
