@@ -11,7 +11,7 @@
 clockSimu = true
 var clockSimuCycle = 0
 if ( clockSimu ) {
-    ClkUpdateTime = 1000
+    ClkUpdateTime = 2000
 } else {
     ClkUpdateTime = 1000
 }
@@ -20,6 +20,14 @@ if ( clockSimu ) {
 <style>
     .cval {
         transition: all 0.8s ; /* faster transition for testing */
+        /****
+        transition-timing-function: cubic-bezier(.29, 1.01, 1, -0.68);
+        transition-timing-function: cubic-bezier(.3, 0.2, 0.2, 1.4);
+        transition-timing-function: cubic-bezier(.3, 0.2, 0.6, 1.4);
+        transition-timing-function: cubic-bezier(0.175, 0.885, 0.440, 1.265);
+        ****/
+         /*** designed with https://matthewlein.com/tools/ceaser **/
+        transition-timing-function: cubic-bezier(0.640, 1.610, 0.605, 1.085); /* custom */
     }
         .buttons {
             margin-bottom : 50vh;
