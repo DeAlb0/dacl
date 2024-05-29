@@ -1,20 +1,18 @@
 
 function numberToName(n,plural = "") {
-    const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei','vier','fünf','sech','sieb','acht','neun']
+    const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei-','vier-','fünf-','sech-','sieb-','acht-','neun-']
     const dname = ['','','zwanzig','dreißig','vierzig','fünfzig','sechzig','siebzig','achtzig','neunzig']
     const tenpostfix = "-zehn"
-    const tenLimit = 12
     let name
     if ( n < 20 ) {
-        name = nname[n]
-        if ( n > tenLimit ) name += tenpostfix
+        name = nname[n].replace(/-$/,tenpostfix)
         if ( n === 1 ) name += plural
     } else {
         name = dname[Math.floor(n/10)]
         if ( n % 10 > 0 ) {
             name = nname[n%10] + "-und-" + name
         } else {
-            name = "  " + name  // add blanks to bring then tenth name on the same position
+            name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
         }
     }
     return name
@@ -107,7 +105,7 @@ function clockSMText(ele) {
 function clockSekundenText(ele) {
     let mytime = clockTime()
     let seconds = mytime.getSeconds()
-    return numberToName(mytime.getSeconds())
+    return numberToName(mytime.getSeconds(),"s")
 }
 
 function clockStundenMinuten1(ele) {
