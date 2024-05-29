@@ -18,8 +18,24 @@ if ( clockSimu ) {
 </script>       
 </head>
 <style>
-    .cval {
-        transition: all 0.8s ; /* faster transition for testing */
+    @property --d1 {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+    }
+    @property --d2 {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+    }
+    .ccontainer2 .xxcword1 .cval {    
+        top: calc((var(--d1) + var(--d2)) * 1%);
+        transition:
+            --d1 1s cubic-bezier(0.7, 1200, 0.3, -1200),
+            --d2 1s cubic-bezier(0.5, 1200, 0.5, -1200);
+    }
+    .ccontainer2 .cword2 .cval {
+        transition: all 1.0s ; /* faster transition for testing */
         /****
         transition-timing-function: cubic-bezier(.29, 1.01, 1, -0.68);
         transition-timing-function: cubic-bezier(.3, 0.2, 0.2, 1.4);

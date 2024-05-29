@@ -124,7 +124,7 @@ function clockSekunden(mele) {
 
 function clockTextAnimate(mele,text) {
     let textA = text.split(/\|/g)
-    const preSegments = [4,1,4]
+    const preSegments = [3,1,4]
     let allOldies = [...ele.querySelectorAll('.outdated,.vanish')]
     for ( segnr = 0 ; segnr < 3 ; segnr++ ) {
         segment = textA[segnr] ?? ''
@@ -195,6 +195,7 @@ function clockUpdate() {
 }
 
 function clockInit() {
+    clockUpdate()
     setInterval(clockUpdate,ClkUpdateTime)
 }
 
