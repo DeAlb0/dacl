@@ -12,7 +12,7 @@ function numberToName(n,plural = "") {
         if ( n % 10 > 0 ) {
             name = nname[n%10] + "-und-" + name
         } else {
-            name = "  " + name  // add blanks to bring then tenth name on the same position
+            name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
         }
     }
     return name
