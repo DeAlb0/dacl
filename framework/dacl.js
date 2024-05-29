@@ -195,6 +195,7 @@ function clockUpdate() {
 }
 
 function clockInit() {
+    clockUpdate()
     setInterval(clockUpdate,ClkUpdateTime)
 }
 
