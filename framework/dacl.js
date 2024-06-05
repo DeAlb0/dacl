@@ -59,7 +59,7 @@ function numberToNameIt(n,plural = "") {
                 case 8 :
                     name = name.substring(0,name.length-1)
             }
-            name = nname[n%10] + "-" + name
+            name = name + "-" + nname[n%10]
         } else {
             name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
         }
@@ -86,8 +86,8 @@ function clockSMTextIt(ele) {
     }
     switch ( minutes ) {
         case 0  : mText = hourHere()                            ; break
-        case 15 : mText = hourHere(1) + "e un quarto d’ora "    ; break
-        case 30 : mText = hourHere(1) + "e mezzo "              ; break
+        case 15 : mText = hourHere() + "e un quarto d’ora "     ; break
+        case 30 : mText = hourHere() + "e mezzo "               ; break
         case 45 : mText = hourHere(1) + "meno un quarto "       ; break
         default : 
             if ( minutes <= 40 ) {
