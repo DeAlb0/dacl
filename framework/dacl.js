@@ -1,23 +1,4 @@
 
-function numberToName(n,plural = "") {
-    const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei-','vier-','fünf-','sech-','sieb-','acht-','neun-']
-    const dname = ['','','zwanzig','dreißig','vierzig','fünfzig','sechzig','siebzig','achtzig','neunzig']
-    const tenpostfix = "-zehn"
-    let name
-    if ( n < 20 ) {
-        name = nname[n].replace(/-$/,tenpostfix)
-        if ( n === 1 ) name += plural
-    } else {
-        name = dname[Math.floor(n/10)]
-        if ( n % 10 > 0 ) {
-            name = nname[n%10] + "-und-" + name
-        } else {
-            name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
-        }
-    }
-    return name
-}
-
 var clockSimu = false
 var mytime = null
 var clockSimuCycle = 0
@@ -59,6 +40,85 @@ Object.defineProperty(String.prototype, 'capitalize', {
   },
   enumerable: false
 });
+
+// information from https://www.babbel.com/en/magazine/telling-time-in-italian
+
+function numberToNameIt(n,plural = "") {
+    const nname = ['zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci','undici','dodici','tre-','quattor-','quin-','se-','-assette','-otto','-annove']
+    const dname = ['','','venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta']
+    const tenpostfix = "dici"
+    let name
+    if ( n < 20 ) {
+        name = nname[n].replace(/-$/,"-"+tenpostfix).replace(/^-/,tenpostfix+"-")
+        if ( n === 1 ) name += plural
+    } else {
+        name = dname[Math.floor(n/10)]
+        if ( n % 10 > 0 ) {
+            switch ( n % 10 ) {
+                case 1 :
+                case 8 :
+                    name = name.substring(0,name.length-1)
+            }
+            name = nname[n%10] + "-" + name
+        } else {
+            name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
+        }
+    }
+    return name
+}
+
+function clockSMTextIt(ele) {
+    let mytime = clockTime()
+    let minutes = mytime.getMinutes()
+    let mText
+    function hourHere(offset=0) {
+        let hour = mytime.getHours()
+        if ( offset !== 0 || hour >  12 ) {
+            hour = hour % 12 + offset
+        }
+        switch ( hour ) {
+            case 1  : prefix = "È l'una"       ; break ;
+            case 0  : prefix = "È mezzogirono" ; break ;
+            case 12 : prefix = "È mezzanotte"  ; break ;
+            default : prefix = "sono le |" + numberToNameIt(hour) + "|" ; break ;
+        }
+        return prefix
+    }
+    switch ( minutes ) {
+        case 0  : mText = hourHere()                            ; break
+        case 15 : mText = hourHere(1) + "e un quarto d’ora "    ; break
+        case 30 : mText = hourHere(1) + "e mezzo "              ; break
+        case 45 : mText = hourHere(1) + "meno un quarto "       ; break
+        default : 
+            if ( minutes <= 40 ) {
+                mText = hourHere() + " e " + numberToNameIt(minutes,"s")
+            } else {
+                mText = hourHere(1) + " meno " + numberToNameItIt(60-minutes)
+            }
+            break
+    }
+    return mText
+}
+
+
+function numberToName(n,plural = "") {
+    const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei-','vier-','fünf-','sech-','sieb-','acht-','neun-']
+    const dname = ['','','zwanzig','dreißig','vierzig','fünfzig','sechzig','siebzig','achtzig','neunzig']
+    const tenpostfix = "-zehn"
+    let name
+    if ( n < 20 ) {
+        name = nname[n].replace(/-$/,tenpostfix)
+        if ( n === 1 ) name += plural
+    } else {
+        name = dname[Math.floor(n/10)]
+        if ( n % 10 > 0 ) {
+            name = nname[n%10] + "-und-" + name
+        } else {
+            name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
+        }
+    }
+    return name
+}
 
 function clockSMText1(ele) {
     let mytime = clockTime()
@@ -114,6 +174,10 @@ function clockStundenMinuten1(ele) {
 
 function clockStundenMinuten(mele) {
     clockTextAnimate(mele,clockSMText())
+}
+
+function clockStundenMinutenIt(mele) {
+    clockTextAnimate(mele,clockSMTextIt())
 }
 
 function clockSekunden(mele) {
@@ -185,9 +249,10 @@ function clockUpdate() {
     for ( ele of document.querySelectorAll('[clockelement]')) {
         let type = ele.getAttribute('clockelement')
         switch ( type ) {
-            case 'StundeMinuten' : clockStundenMinuten(ele) ; break ;
-            case 'Sekunden'      : clockSekunden(ele)       ; break ;
-            case 'Numbers'       : clockSMNumbers(ele)      ; break ;
+            case 'StundeMinuten'   : clockStundenMinuten(ele) ; break ;
+            case 'StundeMinutenIt' : clockStundenMinutenIt(ele) ; break ;
+            case 'Sekunden'        : clockSekunden(ele)       ; break ;
+            case 'Numbers'         : clockSMNumbers(ele)      ; break ;
         }
     }
 }
