@@ -44,7 +44,7 @@ Object.defineProperty(String.prototype, 'capitalize', {
 // information from https://www.babbel.com/en/magazine/telling-time-in-italian
 
 function numberToNameIt(n,plural = "") {
-    const nname = ['zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci','undici','dodici','tre-','quattor-','quin-','se-','-assette','-otto','-annove']
+    const nname = ['zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci','un-','do-','tre-','quattor-','quin-','se-','-assette','-otto','-annove']
     const dname = ['','','venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta']
     const tenpostfix = "dici"
     let name
@@ -91,7 +91,7 @@ function clockSMTextIt(ele) {
         case 45 : mText = hourHere(1) + "meno un quarto "       ; break
         default : 
             if ( minutes <= 40 ) {
-                mText = hourHere() + " e " + numberToNameIt(minutes,"s")
+                mText = hourHere() + " e " + numberToNameIt(minutes)
             } else {
                 mText = hourHere(1) + " meno " + numberToNameIt(60-minutes)
             }
