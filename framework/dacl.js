@@ -93,7 +93,7 @@ function clockSMTextIt(ele) {
             if ( minutes <= 40 ) {
                 mText = hourHere() + " e " + numberToNameIt(minutes,"s")
             } else {
-                mText = hourHere(1) + " meno " + numberToNameItIt(60-minutes)
+                mText = hourHere(1) + " meno " + numberToNameIt(60-minutes)
             }
             break
     }
