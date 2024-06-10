@@ -94,7 +94,7 @@ function clockSMTextIt(ele) {
             case 1  : prefix = "È l'|una|"       ; break ;
             case 0  : prefix = "È |mezzogirono|" ; break ;
             case 12 : prefix = "È |mezzanotte|"  ; break ;
-            default : prefix = "sono le |" + numberToNameIt(hour) + "|" ; break ;
+            default : prefix = "sono le |" + numberToNameIt(hour).replace(/-/,'') + "|" ; break ;
         }
         return prefix
     }
