@@ -2,10 +2,21 @@
 var clockSimu = false
 var mytime = null
 var clockSimuCycle = 0
+var clockSimuPeriod = 1
+var clockSimuUpdate = 1000*(0+60*(1+60*(0)))
+var clockSimuCycles = 99999
+
 if ( clockSimu ) {
     ClkUpdateTime = 1000
 } else {
     ClkUpdateTime = 1000
+}
+
+function clockSimuStart(update = 1,period = 2, cycles = 12) {
+    clockSimuUpdate = update*1000
+    clockSimuPeriod = period
+    clockSimuCycles = cycles
+    clockSimu = true
 }
 
 function clockTimeStep() {
@@ -13,8 +24,11 @@ function clockTimeStep() {
         if ( mytime === null  ) {
             mytime = new Date('2024T00:00:00')
         } else {
-            if ( clockSimuCycle++ % 1 === 0 )
-                mytime.setTime(mytime.getTime()+1000*(0+60*(1+60*(0))))
+            if ( clockSimuCycle++ % clockSimuPeriod === 0 )
+                mytime.setTime(mytime.getTime()+clockSimuUpdate)
+        }
+        if ( --clockSimuCycles === 0 ) {
+            clockSimu = false
         }
     } else {
         mytime = new Date()
@@ -77,9 +91,9 @@ function clockSMTextIt(ele) {
             hour = hour % 12 + offset
         }
         switch ( hour ) {
-            case 1  : prefix = "È l'una"       ; break ;
-            case 0  : prefix = "È mezzogirono" ; break ;
-            case 12 : prefix = "È mezzanotte"  ; break ;
+            case 1  : prefix = "È l'|una|"       ; break ;
+            case 0  : prefix = "È |mezzogirono|" ; break ;
+            case 12 : prefix = "È |mezzanotte|"  ; break ;
             default : prefix = "sono le |" + numberToNameIt(hour) + "|" ; break ;
         }
         return prefix
@@ -93,7 +107,7 @@ function clockSMTextIt(ele) {
             if ( minutes <= 40 ) {
                 mText = hourHere() + " e " + numberToNameIt(minutes,"s")
             } else {
-                mText = hourHere(1) + " meno " + numberToNameItIt(60-minutes)
+                mText = hourHere(1) + " meno " + numberToNameIt(60-minutes)
             }
             break
     }
@@ -260,6 +274,20 @@ function clockUpdate() {
 function clockInit() {
     clockUpdate()
     setInterval(clockUpdate,ClkUpdateTime)
+    clockClickInit()
+}
+
+function clockClickInit(root = document) {
+    for ( ele of root.getElementsByClassName('ccontainer1') ) {
+        ele.addEventListener('click',function(evt) {
+            clockSimuStart(3600)
+        })
+    }
+    for ( ele of root.querySelectorAll('.ccontainer0,.ccontainer2') ) {
+        ele.addEventListener('click',function(evt) {
+            clockSimuStart(60)
+        })
+    }
 }
 
 document.addEventListener("DOMContentLoaded", clockInit)
