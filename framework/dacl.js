@@ -58,7 +58,7 @@ Object.defineProperty(String.prototype, 'capitalize', {
 // information from https://www.babbel.com/en/magazine/telling-time-in-italian
 
 function numberToNameIt(n,plural = "") {
-    const nname = ['zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci','undici','dodici','tre-','quattor-','quin-','se-','-assette','-otto','-annove']
+    const nname = ['zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci','un-','do-','tre-','quattor-','quin-','se-','-assette','-otto','-annove']
     const dname = ['','','venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta']
     const tenpostfix = "dici"
     let name
@@ -73,7 +73,7 @@ function numberToNameIt(n,plural = "") {
                 case 8 :
                     name = name.substring(0,name.length-1)
             }
-            name = nname[n%10] + "-" + name
+            name = name + "-" + nname[n%10]
         } else {
             name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
         }
@@ -100,12 +100,12 @@ function clockSMTextIt(ele) {
     }
     switch ( minutes ) {
         case 0  : mText = hourHere()                            ; break
-        case 15 : mText = hourHere(1) + "e un quarto d’ora "    ; break
-        case 30 : mText = hourHere(1) + "e mezzo "              ; break
+        case 15 : mText = hourHere() + "e un quarto d’ora "     ; break
+        case 30 : mText = hourHere() + "e mezzo "               ; break
         case 45 : mText = hourHere(1) + "meno un quarto "       ; break
         default : 
             if ( minutes <= 40 ) {
-                mText = hourHere() + " e " + numberToNameIt(minutes,"s")
+                mText = hourHere() + " e " + numberToNameIt(minutes)
             } else {
                 mText = hourHere(1) + " meno " + numberToNameIt(60-minutes)
             }
