@@ -12,7 +12,7 @@ if ( clockSimu ) {
     ClkUpdateTime = 1000
 }
 
-function clockSimuStart(update = 1,period = 2, cycles = 12) {
+function clockSimuStart(update = 1,period = 2, cycles = 24) {
     clockSimuUpdate = update*1000
     clockSimuPeriod = period
     clockSimuCycles = cycles
@@ -84,11 +84,17 @@ function numberToNameIt(n,plural = "") {
 function clockSMTextIt(ele) {
     let mytime = clockTime()
     let minutes = mytime.getMinutes()
+    const quarter = [
+        {offset : 0 , text  : ""},
+        {offset : 0 , text  : "e un quarto d’ora "},
+        {offset : 0 , text  : "e mezzo " },
+        {offset : 1 , text  : "meno un quarto " },
+    ]
     let mText
     function hourHere(offset=0) {
         let hour = mytime.getHours()
         if ( offset !== 0 || hour >  12 ) {
-            hour = hour % 12 + offset
+            hour = ( hour + offset ) % 12
         }
         switch ( hour ) {
             case 1  : prefix = "È l'|una|"       ; break ;
