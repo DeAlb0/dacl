@@ -13,7 +13,11 @@ if ( clockSimu ) {
 }
 
 function clockSimuStart(update = 1,period = 2, cycles = 24) {
-    clockSimuUpdate = update*1000
+    if ( clockSimu && clockSimuUpdate === update*1000 ) {
+        clockSimuUpdate = 0
+    } else {
+        clockSimuUpdate = update*1000
+    }
     clockSimuPeriod = period
     clockSimuCycles = cycles
     clockSimu = true
