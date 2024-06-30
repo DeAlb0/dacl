@@ -108,11 +108,13 @@ function clockSMTextIt(ele) {
         }
         return prefix
     }
+    let myquarter = quarter[minutes/15]
     switch ( minutes ) {
-        case 0  : mText = hourHere()                            ; break
-        case 15 : mText = hourHere() + "e un quarto d’ora "     ; break
-        case 30 : mText = hourHere() + "e mezzo "               ; break
-        case 45 : mText = hourHere(1) + "meno un quarto "       ; break
+        case 0  :
+        case 15 :
+        case 30 :
+        case 45 : 
+            mText = hourHere(myquarter.offset) + myquarter.text ; break
         default : 
             if ( minutes <= 40 ) {
                 mText = hourHere() + " e " + numberToNameIt(minutes)
