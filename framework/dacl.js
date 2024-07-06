@@ -88,11 +88,11 @@ function numberToNameIt(n,plural = "") {
 function clockSMTextIt(ele) {
     let mytime = clockTime()
     let minutes = mytime.getMinutes()
-    const quarter = [
-        {offset : 0 , text  : ""},
-        {offset : 0 , text  : "e un quarto d’ora "},
-        {offset : 0 , text  : "e mezzo " },
-        {offset : 1 , text  : "meno un quarto " },
+    const minutesSpecs = [
+        "0:",
+        "15:e un quarto d’ora ",
+        "30:e mezzo ",
+        "45:%h-1 meno un quarto "
     ]
     let mText
     function hourHere(offset=0) {
@@ -108,22 +108,30 @@ function clockSMTextIt(ele) {
         }
         return prefix
     }
-    let myquarter = quarter[minutes/15]
-    switch ( minutes ) {
-        case 0  :
-        case 15 :
-        case 30 :
-        case 45 : 
-            mText = hourHere(myquarter.offset) + myquarter.text ; break
-        default : 
-            if ( minutes <= 40 ) {
-                mText = hourHere() + " e " + numberToNameIt(minutes)
+    let found = false
+    let result = ""
+    for ( mSpec of minutesSpecs ) {
+        m = mSpec.match(/(^[^:]+):(.*)/)
+        condition = m[1]
+        ftext = m[2]
+        if ( minutes === parseInt(condition) ) {
+            mtext = ftext
+            if ( /%h/.test(mtext) ) {
+                mtext = mtext.replace(/%h-1/,hourHere(1)).replace(/%h/,hourHere())
             } else {
-                mText = hourHere(1) + " meno " + numberToNameIt(60-minutes)
+                mtext = hourHere() + " " + mtext
             }
-            break
+            found = true
+        }
     }
-    return mText
+    if ( ! found ) {
+        if ( minutes <= 40 ) {
+            mtext = hourHere() + " e " + numberToNameIt(minutes)
+        } else {
+            mtext = hourHere(1) + " meno " + numberToNameIt(60-minutes)
+        }
+    }
+    return mtext
 }
 
 
