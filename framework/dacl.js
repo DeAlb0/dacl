@@ -107,15 +107,15 @@ ItalySpeclist = {
     "n" : [
         'zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci',
         'un-dici','do-dici','tre-dici','quattor-dici','quin-dici','se-dici','dici-assette','dici-otto','dici-annove',
-        '0%10:{tenth/10}',
-        '1%10:{tenths/10}|uno',
-        '8%10:{tenths/10}|otto',
-        '*:{tenth/10}|{n%10}' 
+        '0%10:{ntenth/10}',
+        '1%10:{ntenths/10}-uno',
+        '8%10:{ntenths/10}-otto',
+        '*:{ntenth/10}-{n%10}'
     ],
-    "tenth" : [
+    "ntenth" : [
         '2:venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta'
     ],
-    "tenths" : [
+    "ntenths" : [
         '2:vent','trent','quarant','cinquant','sessant','settant','ottant','novant'
     ],
 }
@@ -124,46 +124,72 @@ function tspecText(tSpecList,specName,value) {
     const m = specName.match(/^([a-zA-Z]+)(\d*)([+-/%]?)(\d*)$/)
     const name = m[1] ?? specName
     const offset = m[2] ?? '0'
-    let newValue = value
-    let specValue = value
+    let subValue = undefined
+    let curValue = value
     switch ( name.charAt(0).toLowerCase()) {
-        case 'h' : newValue  = value.getHours()   ; break
-        case 'm' : newValue  = value.getMinutes() ; break
-        case 's' : newValue  = value.getSeconds() ; break
-        case 't' : specValue = value.getMinutes() ; break
+        case 'h' : curValue  = value.getHours()   ; break
+        case 'm' : curValue  = value.getMinutes() ; break
+        case 's' : curValue  = value.getSeconds() ; break
+        case 't' : curValue  = value.getMinutes() ; subValue = value ; break
     }
-    let v1 = m[1] === '' ? specValue : parseInt(m[1])
-    let v2 = m[2] === '' ? specValue : parseInt(m[2])
-    switch ( m[2] ) {
-        case '-' : value = v1 - v2 ; break
-        case '+' : value = v1 + v2 ; break
-        case '%' : value = v1 % v2 ; break
-        case '/' : value = Math.floor(v1 / v2) ; break
+    let v1 = m[2] === '' ? curValue : parseInt(m[2])
+    let v2 = m[4] === '' ? curValue : parseInt(m[4])
+    switch ( m[3] ) {
+        case '-' : curValue = v1 - v2 ; break
+        case '+' : curValue = v1 + v2 ; break
+        case '%' : curValue = v1 % v2 ; break
+        case '/' : curValue = Math.floor(v1 / v2) ; break
         case ''  : break
-        default : value = 'invalid op ' + m[2] ; break
+        default : return 'invalid op ' + m[2] ; break
     }
-    const tSpec = tSpecList.getAttribute(name)
+    const tSpec = tSpecList[name]
     if ( tSpec === undefined ) {
         return `field ${name} does not exist`
     }
     let lastSpecValue = 0
     for ( let specline of tSpec ) {
-        let smx = specline.match(/^([><])/)
-        if ( ! smx ) {
-            specValue = lastSpecValue++
+        let fit, textpart, specValue, operator, op2
+        let m = specline.match(/^([^:]*):(.*)/)
+        if ( m ) {
+            let spec = m[1]
+            textpart = m[2]
+            let smx
+            if ( smx = spec.match(/^([><])(\d+)$/) ) {
+                operator = smx[1]
+                specValue = parseInt(smx[2])
+            } else if ( smx = spec.match(/^(\d+)(%)(\d+)$/) ) {
+                operator = smx[2]
+                specValue = parseInt(m[1])
+                op2 = parseInt(m[3])
+            } else if ( smx = spec.match(/^(\d+)$/) ) {
+                operator = '='
+                specValue = parseInt(m[1])
+            } else if ( spec = '*' ) {
+                operator = spec
+                specValue = 0
+            } else {
+                return `unknown spec ${spec}`
+            }
+        } else {
+            specValue = lastSpecValue
+            operator = '='
+            textpart = specline
         }
         switch ( operator ) {
-            case '>' : fit = curValue > specValue ; break
-            case '<' : fit = curValue < specValue ; break
+            case '>' : fit = curValue  >  specValue ; break
+            case '<' : fit = curValue  <  specValue ; break
+            case '=' : fit = curValue === specValue ; break
             case '%' : fit = ( curValue % op2 ) === specValue ; break
             case '*' : fit = true ; break
             default :
-               return `invalid check operator ${operator}`
+            return `invalid check operator ${operator}`
         }
+        lastSpecValue = specValue + 1
         if ( fit ) {
-            result = specline.replace(/\{([^}]+\})/,function (m,p1) {
-                tspecText(tSpecList,p1,newValue)
+            let result = textpart.replace(/\{([^}]+)\}/g,function (m,p1) {
+                return tspecText(tSpecList,p1,subValue ?? curValue)
             })
+            console.log(`tspecText(${specName}) returns ${result}`)
             return result
         }
     }
@@ -171,6 +197,13 @@ function tspecText(tSpecList,specName,value) {
 }
 
 function clockSMTextIt(ele) {
+    let mytime = clockTime()
+    let result = tspecText(ItalySpeclist,"text",mytime)
+    return result
+}
+
+
+function clockSMTextItOld(ele) {
     let mytime = clockTime()
     let minutes = mytime.getMinutes()
     const minutesSpecs = [
