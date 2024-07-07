@@ -85,6 +85,91 @@ function numberToNameIt(n,plural = "") {
     return name
 }
 
+ItalySpeclist = {
+    "text" : [
+        "0:{h}",
+        "15:{h} e un quarto d’ora ",
+        "30:{h} e mezzo ",
+        "45:{h+1} meno un quarto ",
+        "<45:{h} e {m}",
+        "*:{h+1} meno {m60-}"
+    ],
+    "m" : [
+        "*:{n}"
+    ],
+    "h" : [
+        "1:È l'|una|",
+        "0:È |mezzanotte|",
+        "12:È |mezzogirono|",
+        "11:sono le |undici|",
+        "*:sono le |{n}|"
+    ],
+    "n" : [
+        'zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci',
+        'un-dici','do-dici','tre-dici','quattor-dici','quin-dici','se-dici','dici-assette','dici-otto','dici-annove',
+        '0%10:{tenth/10}',
+        '1%10:{tenths/10}|uno',
+        '8%10:{tenths/10}|otto',
+        '*:{tenth/10}|{n%10}' 
+    ],
+    "tenth" : [
+        '2:venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta'
+    ],
+    "tenths" : [
+        '2:vent','trent','quarant','cinquant','sessant','settant','ottant','novant'
+    ],
+}
+
+function tspecText(tSpecList,specName,value) {
+    const m = specName.match(/^([a-zA-Z]+)(\d*)([+-/%]?)(\d*)$/)
+    const name = m[1] ?? specName
+    const offset = m[2] ?? '0'
+    let newValue = value
+    let specValue = value
+    switch ( name.charAt(0).toLowerCase()) {
+        case 'h' : newValue  = value.getHours()   ; break
+        case 'm' : newValue  = value.getMinutes() ; break
+        case 's' : newValue  = value.getSeconds() ; break
+        case 't' : specValue = value.getMinutes() ; break
+    }
+    let v1 = m[1] === '' ? specValue : parseInt(m[1])
+    let v2 = m[2] === '' ? specValue : parseInt(m[2])
+    switch ( m[2] ) {
+        case '-' : value = v1 - v2 ; break
+        case '+' : value = v1 + v2 ; break
+        case '%' : value = v1 % v2 ; break
+        case '/' : value = Math.floor(v1 / v2) ; break
+        case ''  : break
+        default : value = 'invalid op ' + m[2] ; break
+    }
+    const tSpec = tSpecList.getAttribute(name)
+    if ( tSpec === undefined ) {
+        return `field ${name} does not exist`
+    }
+    let lastSpecValue = 0
+    for ( let specline of tSpec ) {
+        let smx = specline.match(/^([><])/)
+        if ( ! smx ) {
+            specValue = lastSpecValue++
+        }
+        switch ( operator ) {
+            case '>' : fit = curValue > specValue ; break
+            case '<' : fit = curValue < specValue ; break
+            case '%' : fit = ( curValue % op2 ) === specValue ; break
+            case '*' : fit = true ; break
+            default :
+               return `invalid check operator ${operator}`
+        }
+        if ( fit ) {
+            result = specline.replace(/\{([^}]+\})/,function (m,p1) {
+                tspecText(tSpecList,p1,newValue)
+            })
+            return result
+        }
+    }
+    return 'no matching spec for ${curValue}/name'
+}
+
 function clockSMTextIt(ele) {
     let mytime = clockTime()
     let minutes = mytime.getMinutes()
