@@ -102,7 +102,7 @@ ItalySpeclist = {
         "0:È |mezzanotte|",
         "12:È |mezzogirono|",
         "11:sono le |undici|",
-        "*:sono le |{n}|"
+        "*:sono le |{n%12}|"
     ],
     "n" : [
         'zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci',
