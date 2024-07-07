@@ -91,8 +91,8 @@ ItalySpeclist = {
         "15:{h} e un quarto d’ora ",
         "30:{h} e mezzo ",
         "45:{h+1} meno un quarto ",
-        "<45:{h} e {m}",
-        "*:{h+1} meno {m60-}"
+        ">47:{h+1} meno {m60-}",
+        "*:{h} e {m}",
     ],
     "m" : [
         "*:{n}"
