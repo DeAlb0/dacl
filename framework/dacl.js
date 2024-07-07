@@ -221,7 +221,8 @@ function clockSekunden(mele) {
 function clockTextAnimate(mele,text) {
     let textA = text.split(/\|/g)
     const preSegments = [3,1,4]
-    let allOldies = [...ele.querySelectorAll('.outdated,.vanish')]
+    let allOldies = [...mele.querySelectorAll('.outdated,.vanish')]
+    let ele, segnr
     for ( segnr = 0 ; segnr < 3 ; segnr++ ) {
         segment = textA[segnr] ?? ''
         ele = mele.childNodes[segnr]
@@ -240,7 +241,7 @@ function clockTextAnimate(mele,text) {
                 }
             }
         }
-        words = segment.trim().replace(/-/g,'- -').split(/ /)
+        let words = segment.trim().replace(/-/g,'- -').split(/ /)
         const nwords = Math.max(words.length,ele.childNodes.length,preSegments[segnr])
         for ( counter = 0 ; counter < nwords ; counter++ ) {
             tstring = words[counter + (segnr === 0 ? words.length - nwords : 0)] ?? ''
@@ -278,16 +279,19 @@ function clockTextAnimate(mele,text) {
     }
 }
 
+const clockShownEvent = new Event("clockShown")
+
 function clockUpdate() {
     clockTimeStep()
-    for ( ele of document.querySelectorAll('[clockelement]')) {
-        let type = ele.getAttribute('clockelement')
+    for ( let ele of document.querySelectorAll('[clockelement]:not(.clone)')) {
+        const type = ele.getAttribute('clockelement')
         switch ( type ) {
             case 'StundeMinuten'   : clockStundenMinuten(ele) ; break ;
             case 'StundeMinutenIt' : clockStundenMinutenIt(ele) ; break ;
             case 'Sekunden'        : clockSekunden(ele)       ; break ;
             case 'Numbers'         : clockSMNumbers(ele)      ; break ;
         }
+        ele.dispatchEvent(clockShownEvent)
     }
 }
 
