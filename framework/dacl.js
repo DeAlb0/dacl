@@ -288,7 +288,7 @@ function clockGeneric(ele,lang) {
     let mytime = clockTime()
     let langSpec = langDict[lang]
     let result = tspecText(langSpec,"time",mytime)
-    result = result.replace(/(|[^-]*)-([^-]*|)/,'$1$2')  // remove dash in hour name (un-dici)
+    result = result.replace(/(\|[^-]*)-([^-]*\|)/,'$1$2')  // remove dash in hour name (un-dici)
     clockTextAnimate(ele,result)    
 }
 
