@@ -86,7 +86,77 @@ function numberToNameIt(n,plural = "") {
 }
 
 ItalySpeclist = {
-    "text" : [
+    "time" : [
+        "0:{h}",
+        "15:{h} e un quarto d’ora ",
+        "30:{h} e mezzo ",
+        "45:{h+1} meno un quarto ",
+        ">47:{h+1} meno {m60-}",
+        "*:{h} e {m}",
+    ],
+    "m" : [
+        "*:{n}"
+    ],
+    "h" : [
+        "1:È l'|una|",
+        "0:È |mezzanotte|",
+        "12:È |mezzogirono|",
+        "11:sono le |undici|",
+        "*:sono le |{n%12}|"
+    ],
+    "n" : [
+        'zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci',
+        'un-dici','do-dici','tre-dici','quattor-dici','quin-dici','se-dici','dici-assette','dici-otto','dici-annove',
+        '0%10:{ntenth/10}',
+        '1%10:{ntenths/10}-uno',
+        '8%10:{ntenths/10}-otto',
+        '*:{ntenth/10}-{n%10}'
+    ],
+    "ntenth" : [
+        '2:venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta'
+    ],
+    "ntenths" : [
+        '2:vent','trent','quarant','cinquant','sessant','settant','ottant','novant'
+    ],
+}
+
+FrenchSpeclist = {
+    "time" : [
+        "0:{h}",
+        "15:{h} e un quarto d’ora ",
+        "30:{h} e mezzo ",
+        "45:{h+1} meno un quarto ",
+        ">47:{h+1} meno {m60-}",
+        "*:{h} e {m}",
+    ],
+    "m" : [
+        "*:{n}"
+    ],
+    "h" : [
+        "1:È l'|una|",
+        "0:È |mezzanotte|",
+        "12:È |mezzogirono|",
+        "11:sono le |undici|",
+        "*:sono le |{n%12}|"
+    ],
+    "n" : [
+        'zero','un','deux','trois','quattre','cinq','sei','sette','otto','nove','dieci',
+        'un-dici','do-dici','tre-dici','quattor-dici','quin-dici','se-dici','dici-assette','dici-otto','dici-annove',
+        '0%10:{ntenth/10}',
+        '1%10:{ntenths/10}-uno',
+        '8%10:{ntenths/10}-otto',
+        '*:{ntenth/10}-{n%10}'
+    ],
+    "ntenth" : [
+        '2:venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta'
+    ],
+    "ntenths" : [
+        '2:vent','trent','quarant','cinquant','sessant','settant','ottant','novant'
+    ],
+}
+
+GermanSpeclist = {
+    "time" : [
         "0:{h}",
         "15:{h} e un quarto d’ora ",
         "30:{h} e mezzo ",
@@ -198,8 +268,20 @@ function tspecText(tSpecList,specName,value) {
 
 function clockSMTextIt(ele) {
     let mytime = clockTime()
-    let result = tspecText(ItalySpeclist,"text",mytime)
+    let result = tspecText(ItalySpeclist,"time",mytime)
     return result
+}
+
+langDict = {
+    "it" : ItalySpeclist,
+    "fr" : FrenchSpeclist,
+    "de" : GermanSpeclist,
+}
+function clockGeneric(ele,lang) {
+    let mytime = clockTime()
+    let langSpec = langDict[lang]
+    let result = tspecText(langSpec,"time",mytime)
+    clockTextAnimate(ele,result)    
 }
 
 
@@ -408,6 +490,7 @@ function clockUpdate() {
             case 'StundeMinutenIt' : clockStundenMinutenIt(ele) ; break ;
             case 'Sekunden'        : clockSekunden(ele)       ; break ;
             case 'Numbers'         : clockSMNumbers(ele)      ; break ;
+            default : clockGeneric(ele,type) ; break
         }
         ele.dispatchEvent(clockShownEvent)
     }
