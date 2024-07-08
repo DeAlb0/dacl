@@ -30,10 +30,6 @@
             padding: 0.2em;
             border-radius: 0.2em;            
          }
-        [clockelement="StundeMinuten"] {
-            font-size: 45px;
-            margin : 1em;
-        }
         .cval {
             border-width: 2px;
             border-color: lightcoral;
@@ -44,15 +40,42 @@
             background-color: #ffe4c4c0;
             /*** designed with https://matthewlein.com/tools/ceaser **/
             transition-timing-function: cubic-bezier(0.640, 1.610, 0.605, 1.085); /* custom */
+            opacity: 0.7;
         }
+        [clockelement="fr"] .cval {
+            background-color: cadetblue;
+        }
+        [clockelement="StundeMinuten"] .cval {
+            background-color:lightcoral;
+        }
+
+        [clockelement="Sekunden"] {
+            font-size: 20px;
+        }
+        [clockelement="Sekunden"] .cval:is(.latest,.outdated) {
+            transition: 1.2s;
+        }
+        [clockelement="Sekunden"] .cval.latest {
+            background-color: #a0a0a0a0;
+            border-color: #703030;
+            border-width: 1px;
+        }
+        [clockelement="Sekunden"] .cword {        
+            min-width: 50px;
+        }
+        [clockelement] {
+            height: 3.5em
+        }
+
     
     </style>
  <body>
     <span class=intro>Es ist</span>
-    <br><br>
+    <div clockelement="Sekunden"></div>
     <div clockelement="StundeMinuten"></div>
-    <br><br><br>
-    <div clockelement="StundeMinutenIt"></div>
+    <div clockelement="it"></div>
+    <div clockelement="fr"></div>
+
     <noscript>
       <span class="cval">Enable javascript to show time here</span>
       </noscript>

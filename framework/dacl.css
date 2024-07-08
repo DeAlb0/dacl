@@ -15,7 +15,7 @@
     position: absolute;
     top: 0em;
 }
-.cval.outdated,.cval.vanish,.cval.free {
+[clockelement] .cval.outdated,[clockelement] .cval.vanish,[clockelement] .cval.free {
     color:transparent;
     border-color: transparent;
     background-color: transparent;
