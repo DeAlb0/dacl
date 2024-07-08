@@ -99,7 +99,7 @@ ItalySpeclist = {
     ],
     "h" : [
         "1:È l'|una|",
-        "0:È |mezzanotte|",
+        "0%24:È |mezzanotte|",
         "12:È |mezzogirono|",
         "11:sono le |undici|",
         "*:sono le |{n%12}|"
@@ -138,7 +138,7 @@ FrenchSpeclist = {
     "h" : [
         "1:|une| heure",
         "12:|midi|",
-        "0:|minuit|",
+        "0%24:|minuit|",
         "*:|{n%12}| heures",
     ],
     "n" : [
