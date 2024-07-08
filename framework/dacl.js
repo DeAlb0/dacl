@@ -141,6 +141,7 @@ FrenchSpeclist = {
         "0%24:|minuit|",
         "*:|{n%12}| heures",
     ],
+    /* see https://www.tutoria.de/unterrichtsmaterialien/franzoesisch/einfache-grund-und-ordnungszahlen-bis-100 */
     "n" : [
         'zéro','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix',
         'onze','douze','treize','quartorz','quinze','seize',
