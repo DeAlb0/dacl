@@ -122,36 +122,40 @@ ItalySpeclist = {
 
 FrenchSpeclist = {
     "time" : [
+        "*:Il est {t}"
+    ],
+    "t" : [
         "0:{h}",
-        "15:{h} e un quarto d’ora ",
-        "30:{h} e mezzo ",
-        "45:{h+1} meno un quarto ",
-        ">47:{h+1} meno {m60-}",
-        "*:{h} e {m}",
+        "15:{h} et quart",
+        "30:{h} et demie",
+        "45:{h+1} moins le quart",
+        ">47:{h+1} moins {m60-}",
+        "*:{h} {m}",
     ],
     "m" : [
         "*:{n}"
     ],
     "h" : [
-        "1:È l'|una|",
-        "0:È |mezzanotte|",
-        "12:È |mezzogirono|",
-        "11:sono le |undici|",
-        "*:sono le |{n%12}|"
+        "1:|une| heure",
+        "12:|midi|",
+        "0:|minuit|",
+        "*:|{n%12}| heures",
     ],
     "n" : [
-        'zero','un','deux','trois','quattre','cinq','sei','sette','otto','nove','dieci',
-        'un-dici','do-dici','tre-dici','quattor-dici','quin-dici','se-dici','dici-assette','dici-otto','dici-annove',
+        'zéro','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix',
+        'onze','douze','treize','quartorz','quinze','seize',
+        '71:soixante et onze',
+        '80:{ntwen/20}s',
+        '>69:{ntwen/20}-{n%20}',
         '0%10:{ntenth/10}',
-        '1%10:{ntenths/10}-uno',
-        '8%10:{ntenths/10}-otto',
-        '*:{ntenth/10}-{n%10}'
+        '1%10:{ntenth/10} et un',
+        '*:{ntenth/10}-{n%10}',
     ],
     "ntenth" : [
-        '2:venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta'
+        '1:dix', 'vingt','trente','quarante','cinquante','soixante',
     ],
-    "ntenths" : [
-        '2:vent','trent','quarant','cinquant','sessant','settant','ottant','novant'
+    "ntwen" : [
+        '3:soixante','quatre-vingt',
     ],
 }
 
@@ -202,6 +206,9 @@ function tspecText(tSpecList,specName,value) {
         case 's' : curValue  = value.getSeconds() ; break
         case 't' : curValue  = value.getMinutes() ; subValue = value ; break
     }
+    if ( curValue === 20 ) {
+        console.log(`tspecText(${tSpecList},${specName},${value})`)
+    }
     let v1 = m[2] === '' ? curValue : parseInt(m[2])
     let v2 = m[4] === '' ? curValue : parseInt(m[4])
     switch ( m[3] ) {
@@ -229,8 +236,8 @@ function tspecText(tSpecList,specName,value) {
                 specValue = parseInt(smx[2])
             } else if ( smx = spec.match(/^(\d+)(%)(\d+)$/) ) {
                 operator = smx[2]
-                specValue = parseInt(m[1])
-                op2 = parseInt(m[3])
+                specValue = parseInt(smx[1])
+                op2 = parseInt(smx[3])
             } else if ( smx = spec.match(/^(\d+)$/) ) {
                 operator = '='
                 specValue = parseInt(m[1])
@@ -281,6 +288,7 @@ function clockGeneric(ele,lang) {
     let mytime = clockTime()
     let langSpec = langDict[lang]
     let result = tspecText(langSpec,"time",mytime)
+    result = result.replace(/(|[^-]*)-([^-]*|)/,'$1$2')  // remove dash in hour name (un-dici)
     clockTextAnimate(ele,result)    
 }
 
@@ -457,6 +465,9 @@ function clockTextAnimate(mele,text) {
                     olatest.classList.remove('unchanged')
                 }
                 if ( tfield !== '' ) {
+                    if ( ! oele ) {
+                        console.log('oele not defined')
+                    }
                     nele = oele.querySelector('.free')
                     nele.classList.remove('free')
                     nele.classList.add('latest')
