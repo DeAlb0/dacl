@@ -51,14 +51,6 @@ function clockSMNumbers(ele) {
     ele.innerText = String(hour).padStart(2,'0') + ":" + String(minutes).padStart(2,'0')
 }
 
-Object.defineProperty(String.prototype, 'capitalize', {
-  value: function() {
-    return this
-    // return this.charAt(0).toUpperCase() + this.slice(1);
-  },
-  enumerable: false
-});
-
 // information from https://www.babbel.com/en/magazine/telling-time-in-italian
 
 langDict = {
@@ -280,7 +272,7 @@ function tspecText(tSpecList,specName,value) {
 }
 
 function clockGeneric(ele,lang,field = 'time') {
-    let mytime = clockTime()
+    let mytime = new Date( clockTime().getTime() - parseFloat(ele.getAttribute('later') ?? '0')*1000 )
     let langSpec = langDict[lang]
     let result = tspecText(langSpec,field,mytime)
     result = result.replace(/(\|[^-]*)-([^-]*\|)/,'$1$2')  // remove dash in hour name (un-dici)
