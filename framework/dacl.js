@@ -61,31 +61,11 @@ Object.defineProperty(String.prototype, 'capitalize', {
 
 // information from https://www.babbel.com/en/magazine/telling-time-in-italian
 
-function numberToNameIt(n,plural = "") {
-    const nname = ['zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci','un-','do-','tre-','quattor-','quin-','se-','-assette','-otto','-annove']
-    const dname = ['','','venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta']
-    const tenpostfix = "dici"
-    let name
-    if ( n < 20 ) {
-        name = nname[n].replace(/-$/,"-"+tenpostfix).replace(/^-/,tenpostfix+"-")
-        if ( n === 1 ) name += plural
-    } else {
-        name = dname[Math.floor(n/10)]
-        if ( n % 10 > 0 ) {
-            switch ( n % 10 ) {
-                case 1 :
-                case 8 :
-                    name = name.substring(0,name.length-1)
-            }
-            name = name + "-" + nname[n%10]
-        } else {
-            name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
-        }
-    }
-    return name
+langDict = {
+    "it" : null,
 }
 
-ItalySpeclist = {
+langDict['it'] = {
     "time" : [
         "0:{h}",
         "15:{h} e un quarto d’ora ",
@@ -120,7 +100,7 @@ ItalySpeclist = {
     ],
 }
 
-FrenchSpeclist = {
+langDict['fr'] = {
     "time" : [
         "*:Il est {t}"
     ],
@@ -160,38 +140,42 @@ FrenchSpeclist = {
     ],
 }
 
-GermanSpeclist = {
+langDict['de'] = {
     "time" : [
-        "0:{h}",
-        "15:{h} e un quarto d’ora ",
-        "30:{h} e mezzo ",
-        "45:{h+1} meno un quarto ",
-        ">47:{h+1} meno {m60-}",
-        "*:{h} e {m}",
+        "0:{h} Uhr",
+        "1:{h} Uhr und eine Minute",
+        "15:viertel {hs+1}",
+        "30:halb {hs+1}",
+        "45:drei-viertel {hs+1}",
+        "59:eine Minute vor {hs+1}",
+        ">40:{m60-} vor {hs+1}",
+        "*:{h} Uhr {m}",
     ],
     "m" : [
         "*:{n}"
     ],
     "h" : [
-        "1:È l'|una|",
-        "0:È |mezzanotte|",
-        "12:È |mezzogirono|",
-        "11:sono le |undici|",
-        "*:sono le |{n%12}|"
+        "0:|{n}|",
+        "1:|ein|",
+        "0%12:|zwölf|",
+        "*:|{n%12}|",
     ],
+    "hs" : [
+        "1:|eins|",
+        "*:{h}",
+    ],
+    
     "n" : [
-        'zero','uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci',
-        'un-dici','do-dici','tre-dici','quattor-dici','quin-dici','se-dici','dici-assette','dici-otto','dici-annove',
-        '0%10:{ntenth/10}',
-        '1%10:{ntenths/10}-uno',
-        '8%10:{ntenths/10}-otto',
-        '*:{ntenth/10}-{n%10}'
+        'null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn',
+        'elf','zwölf',
+        '16:sech-zehn',
+        '17:sieb-zehn',
+        '<20:{n%10}-zehn',
+        '0%10:  {ntenth/10}',
+        '*:{n%10}-und-{ntenth/10}'
     ],
     "ntenth" : [
-        '2:venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta'
-    ],
-    "ntenths" : [
-        '2:vent','trent','quarant','cinquant','sessant','settant','ottant','novant'
+        '2:zwanzig','dreißig','vierzig','fünfzig','sechzig','siebzig','achtzig','neunzig',
     ],
 }
 
@@ -274,17 +258,6 @@ function tspecText(tSpecList,specName,value) {
     return 'no matching spec for ${curValue}/name'
 }
 
-function clockSMTextIt(ele) {
-    let mytime = clockTime()
-    let result = tspecText(ItalySpeclist,"time",mytime)
-    return result
-}
-
-langDict = {
-    "it" : ItalySpeclist,
-    "fr" : FrenchSpeclist,
-    "de" : GermanSpeclist,
-}
 function clockGeneric(ele,lang) {
     let mytime = clockTime()
     let langSpec = langDict[lang]
@@ -292,57 +265,6 @@ function clockGeneric(ele,lang) {
     result = result.replace(/(\|[^-]*)-([^-]*\|)/,'$1$2')  // remove dash in hour name (un-dici)
     clockTextAnimate(ele,result)    
 }
-
-
-function clockSMTextItOld(ele) {
-    let mytime = clockTime()
-    let minutes = mytime.getMinutes()
-    const minutesSpecs = [
-        "0:",
-        "15:e un quarto d’ora ",
-        "30:e mezzo ",
-        "45:%h-1 meno un quarto "
-    ]
-    let mText
-    function hourHere(offset=0) {
-        let hour = mytime.getHours()
-        if ( offset !== 0 || hour >  12 ) {
-            hour = ( hour + offset ) % 12
-        }
-        switch ( hour ) {
-            case 1  : prefix = "È l'|una|"       ; break ;
-            case 0  : prefix = "È |mezzanotte|"  ; break ;
-            case 12 : prefix = "È |mezzogirono|" ; break ;
-            default : prefix = "sono le |" + numberToNameIt(hour).replace(/-/,'') + "|" ; break ;
-        }
-        return prefix
-    }
-    let found = false
-    let result = ""
-    for ( mSpec of minutesSpecs ) {
-        m = mSpec.match(/(^[^:]+):(.*)/)
-        condition = m[1]
-        ftext = m[2]
-        if ( minutes === parseInt(condition) ) {
-            mtext = ftext
-            if ( /%h/.test(mtext) ) {
-                mtext = mtext.replace(/%h-1/,hourHere(1)).replace(/%h/,hourHere())
-            } else {
-                mtext = hourHere() + " " + mtext
-            }
-            found = true
-        }
-    }
-    if ( ! found ) {
-        if ( minutes <= 40 ) {
-            mtext = hourHere() + " e " + numberToNameIt(minutes)
-        } else {
-            mtext = hourHere(1) + " meno " + numberToNameIt(60-minutes)
-        }
-    }
-    return mtext
-}
-
 
 function numberToName(n,plural = "") {
     const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei-','vier-','fünf-','sech-','sieb-','acht-','neun-']
@@ -499,7 +421,6 @@ function clockUpdate() {
         const type = ele.getAttribute('clockelement')
         switch ( type ) {
             case 'StundeMinuten'   : clockStundenMinuten(ele) ; break ;
-            case 'StundeMinutenIt' : clockStundenMinutenIt(ele) ; break ;
             case 'Sekunden'        : clockSekunden(ele)       ; break ;
             case 'Numbers'         : clockSMNumbers(ele)      ; break ;
             default : clockGeneric(ele,type) ; break
