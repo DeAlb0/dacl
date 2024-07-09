@@ -45,22 +45,22 @@
         [clockelement="fr"] .cval {
             background-color: cadetblue;
         }
-        [clockelement="StundeMinuten"] .cval {
+        [clockelement="de"] .cval {
             background-color:lightcoral;
         }
 
-        [clockelement="Sekunden"] {
+        [clockelement="de.s"] {
             font-size: 20px;
         }
-        [clockelement="Sekunden"] .cval:is(.latest,.outdated) {
+        [clockelement="de.s"] .cval:is(.latest,.outdated) {
             transition: 1.2s;
         }
-        [clockelement="Sekunden"] .cval.latest {
+        [clockelement="de.s"] .cval.latest {
             background-color: #a0a0a0a0;
             border-color: #703030;
             border-width: 1px;
         }
-        [clockelement="Sekunden"] .cword {        
+        [clockelement="de.s"] .cword {        
             min-width: 50px;
         }
         [clockelement] {
@@ -71,8 +71,8 @@
     </style>
  <body>
     <span class=intro>Es ist</span>
-    <div clockelement="Sekunden"></div>
-    <div clockelement="StundeMinuten"></div>
+    <div clockelement="de.s"></div>
+    <div clockelement="de"></div>
     <div clockelement="it"></div>
     <div clockelement="fr"></div>
 

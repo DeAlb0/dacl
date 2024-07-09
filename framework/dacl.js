@@ -65,6 +65,22 @@ langDict = {
     "it" : null,
 }
 
+langDict['num'] = {
+    "time" : [
+        '*:{h}:{m}'
+    ],
+    "h" : [
+        '*:{n}'
+    ],
+    "m" : [
+        '*:{n}'
+    ],
+    "n" : [
+        '0','1','2','3','4','5','6','7','8','9',
+        '*:{n/10}{n%10}'
+    ],
+}
+
 langDict['it'] = {
     "time" : [
         "0:{h}",
@@ -162,9 +178,14 @@ langDict['de'] = {
     ],
     "hs" : [
         "1:|eins|",
-        "*:{h}",
+        "0:|{n}|",
+        "1:|ein|",
+        "0%12:|zwölf|",
+        "*:|{n%12}|",
     ],
-    
+    "s" : [
+        "*:{n}"
+    ],
     "n" : [
         'null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn',
         'elf','zwölf',
@@ -258,95 +279,12 @@ function tspecText(tSpecList,specName,value) {
     return 'no matching spec for ${curValue}/name'
 }
 
-function clockGeneric(ele,lang) {
+function clockGeneric(ele,lang,field = 'time') {
     let mytime = clockTime()
     let langSpec = langDict[lang]
-    let result = tspecText(langSpec,"time",mytime)
+    let result = tspecText(langSpec,field,mytime)
     result = result.replace(/(\|[^-]*)-([^-]*\|)/,'$1$2')  // remove dash in hour name (un-dici)
     clockTextAnimate(ele,result)    
-}
-
-function numberToName(n,plural = "") {
-    const nname = ['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf','zwölf','drei-','vier-','fünf-','sech-','sieb-','acht-','neun-']
-    const dname = ['','','zwanzig','dreißig','vierzig','fünfzig','sechzig','siebzig','achtzig','neunzig']
-    const tenpostfix = "-zehn"
-    let name
-    if ( n < 20 ) {
-        name = nname[n].replace(/-$/,tenpostfix)
-        if ( n === 1 ) name += plural
-    } else {
-        name = dname[Math.floor(n/10)]
-        if ( n % 10 > 0 ) {
-            name = nname[n%10] + "-und-" + name
-        } else {
-            name = "  " + name  // add blanks to bring the tenth name on the same position as for odd numbers
-        }
-    }
-    return name
-}
-
-function clockSMText1(ele) {
-    let mytime = clockTime()
-    let hour = mytime.getHours()
-    let minutes = mytime.getMinutes()
-    let mText = " " + numberToName(minutes,"e").capitalize() + " Minute"
-    switch ( minutes ) {
-        case 0 : mText = '' ; break
-        case 1 : mText = " und" + mText ; break
-        default : mText += "n"
-    }
-    return numberToName(hour).capitalize() + " Uhr" + mText
-}
-
-function clockSMText(ele) {
-    let mytime = clockTime()
-    let minutes = mytime.getMinutes()
-    let mText
-    function hourHere(offset=0) {
-        let hour = mytime.getHours()
-        if ( offset !== 0 || hour >  12 ) {
-            hour = hour % 12 + offset
-        }
-        return "|" + numberToName(hour,offset?'s':'') + "|"
-    }
-    switch ( minutes ) {
-        case 0  : mText = hourHere() + " Uhr"                 ; break
-        case 1  : mText = hourHere() + " Uhr und eine Minute" ; break
-        case 59 : mText = "eine Minute vor " + hourHere(1) ; break
-        case 15 : mText = "viertel "         + hourHere(1) ; break
-        case 30 : mText = "halb "            + hourHere(1) ; break
-        case 45 : mText = "drei-viertel "    + hourHere(1) ; break
-        default : 
-            if ( minutes <= 40 ) {
-                mText = hourHere() + " Uhr " + numberToName(minutes,"s")
-            } else {
-                mText = numberToName(60-minutes,"e") + " vor " + hourHere(1)
-            }
-            break
-    }
-    return mText
-}
-
-function clockSekundenText(ele) {
-    let mytime = clockTime()
-    let seconds = mytime.getSeconds()
-    return numberToName(mytime.getSeconds(),"s")
-}
-
-function clockStundenMinuten1(ele) {
-    ele.innerText = clockSMText().replaceAll(/-/g,'')
-}
-
-function clockStundenMinuten(mele) {
-    clockTextAnimate(mele,clockSMText())
-}
-
-function clockStundenMinutenIt(mele) {
-    clockTextAnimate(mele,clockSMTextIt())
-}
-
-function clockSekunden(mele) {
-    clockTextAnimate(mele,clockSekundenText())
 }
 
 function clockTextAnimate(mele,text) {
@@ -418,12 +356,16 @@ const clockShownEvent = new Event("clockShown")
 function clockUpdate() {
     clockTimeStep()
     for ( let ele of document.querySelectorAll('[clockelement]:not(.clone)')) {
-        const type = ele.getAttribute('clockelement')
+        let type = ele.getAttribute('clockelement')
         switch ( type ) {
-            case 'StundeMinuten'   : clockStundenMinuten(ele) ; break ;
-            case 'Sekunden'        : clockSekunden(ele)       ; break ;
             case 'Numbers'         : clockSMNumbers(ele)      ; break ;
-            default : clockGeneric(ele,type) ; break
+            default :
+                let field = 'time'
+                if ( m = type.match(/([^\.]+)\.(.+)/) ) {
+                    type = m[1]
+                    field = m[2]
+                }
+                clockGeneric(ele,type,field) ; break
         }
         ele.dispatchEvent(clockShownEvent)
     }

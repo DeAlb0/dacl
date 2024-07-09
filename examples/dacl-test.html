@@ -18,16 +18,6 @@ if ( clockSimu ) {
 </script>       
 </head>
 <style>
-    @property --d1 {
-    syntax: '<number>';
-    inherits: false;
-    initial-value: 0;
-    }
-    @property --d2 {
-    syntax: '<number>';
-    inherits: false;
-    initial-value: 0;
-    }
     .ccontainer2 .xxcword1 .cval {    
         top: calc((var(--d1) + var(--d2)) * 1%);
         transition:
@@ -58,10 +48,10 @@ if ( clockSimu ) {
         [clockelement] {
             margin-bottom: 1.7em;
         }
-        [clockelement="StundeMinuten"],[clockelement="StundeMinutenIt"] {
+        [clockelement="de"],[clockelement="deIt"] {
             font-size: 45px;
         }
-        [clockelement="Sekunden"] {
+        [clockelement="de.s"] {
             font-size: 20px;
         }
         [clockelement="Numbers"] {
@@ -69,15 +59,15 @@ if ( clockSimu ) {
             margin-bottom: -1em;
             display: contents;
         }
-        [clockelement="Sekunden"] .cval:is(.latest,.outdated) {
+        [clockelement="de.s"] .cval:is(.latest,.outdated) {
             transition: 1.2s;
         }
-        [clockelement="Sekunden"] .cval.latest {
+        [clockelement="de.s"] .cval.latest {
             background-color: #a0a0a0a0;
             border-color: #703030;
             border-width: 1px;
         }
-        [clockelement="Sekunden"] .cword {        
+        [clockelement="de.s"] .cword {        
             min-width: 50px;
         }
         .cval {
@@ -98,9 +88,8 @@ if ( clockSimu ) {
     <div>
     Es ist
     <div clockelement="Numbers"></div>
-    <div clockelement="StundeMinuten"></div>
+    <div clockelement="de.s"></div>
     <div clockelement="de"></div>
-    <div clockelement="Sekunden"></div>
     <div clockelement="it"></div>
     <div clockelement="fr"></div>
     
