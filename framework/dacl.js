@@ -150,6 +150,10 @@ langDict['fr'] = {
 
 langDict['de'] = {
     "time" : [
+        "*:{tm}", // remove this line to active the "Es ist" prefix as part of the time text
+        "*:Es ist {tm}"
+    ],
+    "tm" : [
         "0:{h} Uhr",
         "1:{h} Uhr und eine Minute",
         "15:viertel {hs+1}",
