@@ -177,10 +177,7 @@ langDict['de'] = {
     ],
     "hs" : [
         "1:|eins|",
-        "0:|{n}|",
-        "1:|ein|",
-        "0%12:|zwölf|",
-        "*:|{n%12}|",
+        "*:|{h}|",
     ],
     "s" : [
         "*:{n}"
@@ -205,41 +202,7 @@ function langSpecFetch(lang) {
     return langSpec
 }
 
-function tspecText(tSpecList,specName,value) {
-    const m = specName.match(/^([a-zA-Z\.]+)(\d*)([+-/%]?)(\d*)$/)
-    let name = m[1] ?? specName
-    if ( mname = name.match(/([^\.]+)\.(.+)/) ) {
-        tSpecList = langSpecFetch(mname[1])
-        name = mname[2]
-    } else if ( tSpecList === null ) {
-        tSpecList = langSpecFetch(name)
-        name = 'time'
-    }
-    let subValue = undefined
-    let curValue = value
-    switch ( name.charAt(0).toLowerCase()) {
-        case 'h' : curValue  = value.getHours()   ; break
-        case 'm' : curValue  = value.getMinutes() ; break
-        case 's' : curValue  = value.getSeconds() ; break
-        case 't' : curValue  = value.getMinutes() ; subValue = value ; break
-    }
-    if ( curValue === 20 ) {
-        console.log(`tspecText(${tSpecList},${specName},${value})`)
-    }
-    let v1 = m[2] === '' ? curValue : parseInt(m[2])
-    let v2 = m[4] === '' ? curValue : parseInt(m[4])
-    switch ( m[3] ) {
-        case '-' : curValue = v1 - v2 ; break
-        case '+' : curValue = v1 + v2 ; break
-        case '%' : curValue = v1 % v2 ; break
-        case '/' : curValue = Math.floor(v1 / v2) ; break
-        case ''  : break
-        default : return 'invalid op ' + m[2] ; break
-    }
-    const tSpec = tSpecList[name]
-    if ( tSpec === undefined ) {
-        return `field ${name} does not exist`
-    }
+function tSpecFindMatching(tSpec,curValue) {
     let lastSpecValue = 0
     for ( let specline of tSpec ) {
         let fit, textpart, specValue, operator, op2
@@ -258,9 +221,8 @@ function tspecText(tSpecList,specName,value) {
             } else if ( smx = spec.match(/^(\d+)$/) ) {
                 operator = '='
                 specValue = parseInt(m[1])
-            } else if ( spec = '*' ) {
-                operator = spec
-                specValue = 0
+            } else if ( spec === '*' ) {
+                return textpart
             } else {
                 return `unknown spec ${spec}`
             }
@@ -274,20 +236,60 @@ function tspecText(tSpecList,specName,value) {
             case '<' : fit = curValue  <  specValue ; break
             case '=' : fit = curValue === specValue ; break
             case '%' : fit = ( curValue % op2 ) === specValue ; break
-            case '*' : fit = true ; break
             default :
             return `invalid check operator ${operator}`
         }
-        lastSpecValue = specValue + 1
         if ( fit ) {
-            let result = textpart.replace(/\{([^}]+)\}/g,function (m,p1) {
-                return tspecText(tSpecList,p1,subValue ?? curValue)
-            })
-            console.log(`tspecText(${specName}) returns ${result}`)
-            return result
+            return textpart
+        }
+        lastSpecValue = specValue + 1
+    }
+    return 'no matching spec for ${curValue}/${tSpec}'
+}    
+
+function tspecText(tSpecList,specName,value) {
+    const m = specName.match(/^([a-zA-Z\.]+)(\d*)([+-/%]?)(\d*)$/)
+    let name = m[1] ?? specName
+    if ( mname = name.match(/([^\.]+)\.(.+)/) ) {
+        tSpecList = langSpecFetch(mname[1])
+        name = mname[2]
+    } else if ( tSpecList === null ) {
+        tSpecList = langSpecFetch(name)
+        name = 'time'
+    }
+    let subValue = undefined
+    let curValue = value
+    if ( typeof(value) === 'object' ) {
+        switch ( name.charAt(0).toLowerCase()) {
+            case 'h' : curValue  = value.getHours()   ; break
+            case 'm' : curValue  = value.getMinutes() ; break
+            case 's' : curValue  = value.getSeconds() ; break
+            case 't' : curValue  = value.getMinutes() ; subValue = value ; break
         }
     }
-    return 'no matching spec for ${curValue}/name'
+    if ( curValue === 20 ) {
+        console.log(`tspecText(${tSpecList},${specName},${value})`)
+    }
+    let v1 = m[2] === '' ? curValue : parseInt(m[2])
+    let v2 = m[4] === '' ? curValue : parseInt(m[4])
+    switch ( m[3] ) {
+        case '-' : curValue = v1 - v2 ; break
+        case '+' : curValue = v1 + v2 ; break
+        case '%' : curValue = v1 % v2 ; break
+        case '/' : curValue = Math.floor(v1 / v2) ; break
+        case ''  : break
+        default : return 'invalid op ' + m[2] ; break
+    }
+    const tSpec = tSpecList[name]
+    if ( tSpec === undefined ) {
+        return `field ${name} does not exist`
+    }
+    let resultText = tSpecFindMatching(tSpec,curValue)
+    resultText = resultText.replace(/\{([^}]+)\}/g,function (m,p1) {
+        return tspecText(tSpecList,p1,subValue ?? curValue)
+    })
+    console.log(`tspecText(${specName}) returns ${resultText}`)
+    return resultText
 }
 
 function clockGeneric(ele,langfield) {
