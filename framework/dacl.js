@@ -67,6 +67,9 @@ langDict['num'] = {
     "m" : [
         '*:{n}'
     ],
+    "s" : [
+        '*:{n}'
+    ],
     "n" : [
         '0','1','2','3','4','5','6','7','8','9',
         '*:{n/10}{n%10}'
@@ -196,10 +199,22 @@ langDict['de'] = {
     ],
 }
 
+function langSpecFetch(lang) {
+    let langSpec = langDict[lang]
+    // TODO: check if lang is a url and fetch related .json document and return result
+    return langSpec
+}
+
 function tspecText(tSpecList,specName,value) {
-    const m = specName.match(/^([a-zA-Z]+)(\d*)([+-/%]?)(\d*)$/)
-    const name = m[1] ?? specName
-    const offset = m[2] ?? '0'
+    const m = specName.match(/^([a-zA-Z\.]+)(\d*)([+-/%]?)(\d*)$/)
+    let name = m[1] ?? specName
+    if ( mname = name.match(/([^\.]+)\.(.+)/) ) {
+        tSpecList = langSpecFetch(mname[1])
+        name = mname[2]
+    } else if ( tSpecList === null ) {
+        tSpecList = langSpecFetch(name)
+        name = 'time'
+    }
     let subValue = undefined
     let curValue = value
     switch ( name.charAt(0).toLowerCase()) {
@@ -275,10 +290,9 @@ function tspecText(tSpecList,specName,value) {
     return 'no matching spec for ${curValue}/name'
 }
 
-function clockGeneric(ele,lang,field = 'time') {
+function clockGeneric(ele,langfield) {
     let mytime = new Date( clockTime().getTime() - parseFloat(ele.getAttribute('later') ?? '0')*1000 )
-    let langSpec = langDict[lang]
-    let result = tspecText(langSpec,field,mytime)
+    let result = tspecText(null,langfield,mytime)
     result = result.replace(/(\|[^-]*)-([^-]*\|)/,'$1$2')  // remove dash in hour name (un-dici)
     clockTextAnimate(ele,result)    
 }
@@ -356,12 +370,7 @@ function clockUpdate() {
         switch ( type ) {
             case 'Numbers'         : clockSMNumbers(ele)      ; break ;
             default :
-                let field = 'time'
-                if ( m = type.match(/([^\.]+)\.(.+)/) ) {
-                    type = m[1]
-                    field = m[2]
-                }
-                clockGeneric(ele,type,field) ; break
+                clockGeneric(ele,type) ; break
         }
         ele.dispatchEvent(clockShownEvent)
     }
