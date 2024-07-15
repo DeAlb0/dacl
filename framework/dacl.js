@@ -3,7 +3,7 @@ var clockSimu = false
 var mytime = null
 var clockSimuCycle = 0
 var clockSimuPeriod = 1
-var clockSimuUpdate = 1000*(0+60*(1+60*(0)))
+var clockSimuUpdate = 1000*(3+60*(1+60*(0)))
 var clockSimuCycles = 99999
 
 if ( clockSimu ) {
@@ -315,7 +315,7 @@ function clockTextAnimate(mele,text) {
                 sele = document.createElement('div')
                 sele.className = `cword cword${i}`
                 ele.appendChild(sele)
-                for ( j = 0 ; j < 3 ; j++ ) {
+                for ( j = 0 ; j < 4 ; j++ ) {
                     vele = document.createElement('div')
                     vele.className = `cval cval${j} free`
                     sele.appendChild(vele)
@@ -349,7 +349,7 @@ function clockTextAnimate(mele,text) {
                     nele.classList.toggle('cbindright',/-$/.test(tstring))
                     const wPad = 10
                     if ( nele.clientWidth + wPad > nele.parentNode.clientWidth ) {
-                        nele.parentNode.style.minWidth = nele.clientWidth + wPad
+                        nele.parentNode.style.minWidth = `${nele.clientWidth + wPad}px`
                     }
                 }
             }
