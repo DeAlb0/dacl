@@ -51,11 +51,9 @@ function clockSMNumbers(ele) {
     ele.innerText = String(hour).padStart(2,'0') + ":" + String(minutes).padStart(2,'0')
 }
 
-// information from https://www.babbel.com/en/magazine/telling-time-in-italian
+langDict = {}
 
-langDict = {
-    "it" : null,
-}
+// information from https://www.babbel.com/en/magazine/telling-time-in-italian
 
 langDict['num'] = {
     "time" : [
@@ -153,7 +151,7 @@ langDict['fr'] = {
 
 langDict['de'] = {
     "time" : [
-        "*:{tm}", // remove this line to active the "Es ist" prefix as part of the time text
+        // "*:{tm}", // remove this line to active the "Es ist" prefix as part of the time text
         "*:Es ist {tm}"
     ],
     "tm" : [
@@ -340,6 +338,14 @@ function clockTextAnimate(mele,text) {
                 if ( tfield !== '' ) {
                     if ( ! oele ) {
                         console.log('oele not defined')
+                        let sele = document.createElement('div')
+                        sele.className = `cword cword${counter}`
+                        ele.appendChild(sele)
+                        for ( j = 0 ; j < 4 ; j++ ) {
+                            let vele = document.createElement('div')
+                            vele.className = `cval cval${j} free`
+                            sele.appendChild(vele)
+                        }
                     }
                     nele = oele.querySelector('.free')
                     nele.classList.remove('free')
