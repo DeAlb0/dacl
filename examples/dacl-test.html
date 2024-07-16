@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--add this to run it without quirks mode, unfortunately this does yet work as I started in quirks mode and now seem to have dependencies
-   <!DOCTYPE html>
--->    
-
 <html>
 <head>
 <meta charset="utf-8">
@@ -19,28 +15,6 @@ if ( clockSimu ) {
 </script>       
 </head>
 <style>
-    [clockelement] {
-        display : inline-block;
-        flex-direction: row;
-    }
-    .ccontainer {
-        display: inline-block;
-    }
-    .cword {
-        display: inline-block;
-        position: relative;
-    }
-    .cval {
-        display: inline;
-        position: absolute;
-    }
-    .cval3.free {
-        top:0px;
-        position: relative;
-        width: 80px;
-        height: 2ex;
-        display: inline-block;
-    }
     .ccontainer2 .xxcword1 .cval {    
         top: calc((var(--d1) + var(--d2)) * 1%);
         transition:

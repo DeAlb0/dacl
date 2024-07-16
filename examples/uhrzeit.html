@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!--add this to run it without quirks mode, unfortunately this does yet work as I started in quirks mode and now seem to have dependencies
--->    
 <html>
 <head>
     <title>Bergzeit Uhrzeit</title>
@@ -15,7 +13,7 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 45px;
-            margin : 2vw;
+            margin : 1vw;
             background-color: grey;
             background-image: url('https://dealb0.github.io/cmedia/img/20240519_184448_fhds.jpg');
             background-repeat: no-repeat;
@@ -35,7 +33,7 @@
             border-color: lightcoral;
             border-style: solid;
             border-radius: 0.2em;
-            padding: 0.05em 0.2em;
+            padding: 0em 0.2em;
             background-color: bisque;
             background-color: #ffe4c4c0;
             /*** designed with https://matthewlein.com/tools/ceaser **/
@@ -48,9 +46,14 @@
         [clockelement="de"] .cval {
             background-color:lightcoral;
         }
+        [clockelement="de"] {
+            display: inline-block;
+        }
 
         [clockelement="de.s"] {
             font-size: 20px;
+            display: inline-block;
+            height: 2em;
         }
         [clockelement="de.s"] .cval:is(.latest,.outdated) {
             transition: 1.2s;
@@ -64,7 +67,7 @@
             min-width: 50px;
         }
         [clockelement] {
-            height: 3.5em
+            height: 3.0em
         }
         a {
             all: unset;
@@ -75,8 +78,8 @@
     </style>
  <body>
     <span class=intro><a href="https://github.com/DeAlb0/dacl">Es ist</a></span>
-    <div clockelement="de.s"></div>
     <div clockelement="de"></div>
+    <div clockelement="de.s"></div>
     <div clockelement="it" later="1"></div>
     <div clockelement="fr" later="2"></div>
 

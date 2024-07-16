@@ -1,25 +1,25 @@
-[clockelement] {
-    display : flex;
-    flex-direction: row;
+
+[clockelement]:has(>.ccontainer) div {
+    display : inline-block;
 }
-.ccontainer {
-    display: flex
-}
+
 .cword {
     position: relative;
     min-width: 100px;
-    display: block;
 }
 .cval {
     transition: all 1.8s ;
     position: absolute;
     top: 0em;
 }
-.cval3 {
+.cval3.free {
     position: static;
+    top:0px;
+    width: 80px;
+    height: 2ex;
     visibility: hidden;
-    width: 120px;
 }
+
 [clockelement] .cval.outdated,[clockelement] .cval.vanish,[clockelement] .cval.free {
     color:transparent;
     border-color: transparent;
