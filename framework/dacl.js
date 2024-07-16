@@ -338,13 +338,13 @@ function clockTextAnimate(mele,text) {
                 if ( tfield !== '' ) {
                     if ( ! oele ) {
                         console.log('oele not defined')
-                        let sele = document.createElement('div')
-                        sele.className = `cword cword${counter}`
-                        ele.appendChild(sele)
+                        oele = document.createElement('div')
+                        oele.className = `cword cword${counter}`
+                        ele.appendChild(oele)
                         for ( j = 0 ; j < 4 ; j++ ) {
                             let vele = document.createElement('div')
                             vele.className = `cval cval${j} free`
-                            sele.appendChild(vele)
+                            oele.appendChild(vele)
                         }
                     }
                     nele = oele.querySelector('.free')
