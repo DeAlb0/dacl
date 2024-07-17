@@ -269,7 +269,7 @@ function tspecText(tSpecList,specName,value) {
         tSpecList = langSpecFetch(name)
         name = 'time'
     }
-    let subValue = undefined
+    // let subValue = undefined
     let curValue = value
     if ( typeof(value) === 'object' ) {
         switch ( name.charAt(0).toLowerCase()) {
@@ -297,9 +297,9 @@ function tspecText(tSpecList,specName,value) {
         // return `field ${name} does not exist`
     }
     let resultText = tSpecFindMatching(tSpec,curValue)
-    resultText = resultText.replace(/\{([^}]+)\}/g,function (m,p1) {
-        return tspecText(tSpecList,p1,subValue ?? curValue)
-    })
+    // resultText = resultText.replace(/\{([^}]+)\}/g,function (m,p1) {
+    //     return tspecText(tSpecList,p1,subValue ?? curValue)
+    // })
     console.log(`tspecText(${specName}) returns ${resultText}`)
     return resultText
 }
@@ -394,7 +394,7 @@ document.addEventListener("DOMContentLoadedxx", function() {
     </style>
 </head>
 <body>
-    <h1>Uhrozeit</h1>
+    <h1>Uhr#zeit</h1>
     <div data-clockfmt="de"></div>
     <div data-clockfmt="de.s"></div>
     <div data-clockfmt="it" later="1"></div>
