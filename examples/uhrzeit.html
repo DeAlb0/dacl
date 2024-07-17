@@ -32,48 +32,48 @@
             transition-timing-function: cubic-bezier(0.640, 1.610, 0.605, 1.085); /* custom */
             opacity: 0.7;
         }
-        [clockelement="fr"] .cval {
+        [data-clockfmt="fr"] .cval {
             background-color: cadetblue;
         }
-        [clockelement="de"] .cval {
+        [data-clockfmt="de"] .cval {
             background-color:lightcoral;
         }
-        [clockelement="de"] {
+        [data-clockfmt="de"] {
             display: inline-block;
         }
 
-        [clockelement="de.s"] {
+        [data-clockfmt="de.s"] {
             font-size: 20px;
             display: inline-block;
             height: 2em;
         }
-        [clockelement="de.s"] .cval:is(.latest,.outdated) {
+        [data-clockfmt="de.s"] .cval:is(.latest,.outdated) {
             transition: 1.2s;
         }
-        [clockelement="de.s"] .cval.latest {
+        [data-clockfmt="de.s"] .cval.latest {
             background-color: #a0a0a0a0;
             border-color: #703030;
             border-width: 1px;
         }
-        [clockelement="de.s"] .cword {        
+        [data-clockfmt="de.s"] .cword {        
             min-width: 50px;
         }
-        [clockelement] {
+        [data-clockfmt] {
             height: 3.0em
         }
         a {
             all: unset;
         }
-        [clockelement="de.s"] .ccontainer1,[clockelement="de.s"] .ccontainer2 {
+        [data-clockfmt="de.s"] .ccontainer1,[data-clockfmt="de.s"] .ccontainer2 {
             display: none !important;
         }
     </style>
 </head>
 <body>
-    <div clockelement="de"></div>
-    <div clockelement="de.s"></div>
-    <div clockelement="it" later="1"></div>
-    <div clockelement="fr" later="2"></div>
+    <div data-clockfmt="de"></div>
+    <div data-clockfmt="de.s"></div>
+    <div data-clockfmt="it" later="1"></div>
+    <div data-clockfmt="fr" later="2"></div>
 
     <noscript>
       <span class="cval">Enable javascript to show time here</span>

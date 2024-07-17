@@ -373,8 +373,8 @@ const clockShownEvent = new Event("clockShown")
 
 function clockUpdate() {
     clockTimeStep()
-    for ( let ele of document.querySelectorAll('[clockelement]:not(.clone)')) {
-        let type = ele.getAttribute('clockelement')
+    for ( let ele of document.querySelectorAll('[data-clockfmt]:not(.clone)')) {
+        let type = ele.getAttribute('data-clockfmt')
         switch ( type ) {
             case 'Numbers'         : clockSMNumbers(ele)      ; break ;
             default :

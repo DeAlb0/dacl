@@ -180,8 +180,8 @@ function clockStundenMinuten(mele) {
 
 function clockUpdate() {
     clockTimeStep()
-    for ( ele of document.querySelectorAll('[clockelement]')) {
-        let type = ele.getAttribute('clockelement')
+    for ( ele of document.querySelectorAll('[data-clockfmt]')) {
+        let type = ele.getAttribute('data-clockfmt')
         switch ( type ) {
             case 'StundeMinuten' : clockStundenMinuten(ele) ; break ;
             case 'Numbers'       : clockSMNumbers(ele)      ; break ;
@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", clockInit)
 </script>
 <style>
     /**** clock style essentiell style **/
-    [clockelement] {
+    [data-clockfmt] {
         display : flex;
         flex-direction: row;
     }
@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", clockInit)
         font-size: 45px;
         background-color: grey;
     }
-    [clockelement="StundeMinuten"] {
+    [data-clockfmt="StundeMinuten"] {
         font-size: 45px;
         margin : 2em;
     }
@@ -265,8 +265,8 @@ document.addEventListener("DOMContentLoaded", clockInit)
 </style>
 <body>
 Es ist
-<div clockelement="Numbers"></div>
-<div clockelement="StundeMinuten"></div>
+<div data-clockfmt="Numbers"></div>
+<div data-clockfmt="StundeMinuten"></div>
 <br><br><br><br><br><br>
 <div class="buttons">
     <H4 style="padding:30px">Clock Simu</H4>

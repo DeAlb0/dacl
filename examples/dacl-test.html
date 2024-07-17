@@ -42,29 +42,29 @@ if ( clockSimu ) {
             font-size: 45px;
             background-color: grey;
         }
-        [clockelement] {
+        [data-clockfmt] {
             margin-bottom: 1.7em;
         }
-        [clockelement="de"],[clockelement="deIt"] {
+        [data-clockfmt="de"],[data-clockfmt="deIt"] {
             font-size: 45px;
         }
-        [clockelement="de.s"] {
+        [data-clockfmt="de.s"] {
             font-size: 20px;
         }
-        [clockelement="Numbers"] {
+        [data-clockfmt="Numbers"] {
             border-top: 0.3em;
             margin-bottom: -1em;
             display: contents;
         }
-        [clockelement="de.s"] .cval:is(.latest,.outdated) {
+        [data-clockfmt="de.s"] .cval:is(.latest,.outdated) {
             transition: 1.2s;
         }
-        [clockelement="de.s"] .cval.latest {
+        [data-clockfmt="de.s"] .cval.latest {
             background-color: #a0a0a0a0;
             border-color: #703030;
             border-width: 1px;
         }
-        [clockelement="de.s"] .cword {        
+        [data-clockfmt="de.s"] .cword {        
             min-width: 50px;
         }
         .cval {
@@ -75,7 +75,7 @@ if ( clockSimu ) {
             padding: 0 0.2em;
             background-color: bisque;
         }
-        [clockelement="fr"] .cval {
+        [data-clockfmt="fr"] .cval {
             background-color: cadetblue;
         }
 
@@ -84,11 +84,11 @@ if ( clockSimu ) {
  <body>
     <div>
     Es ist
-    <div clockelement="Numbers"></div>
-    <div clockelement="de.s"></div>
-    <div clockelement="de"></div>
-    <div clockelement="it" later="1"></div>
-    <div clockelement="fr" later="2"></div>
+    <div data-clockfmt="Numbers"></div>
+    <div data-clockfmt="de.s"></div>
+    <div data-clockfmt="de"></div>
+    <div data-clockfmt="it" later="1"></div>
+    <div data-clockfmt="fr" later="2"></div>
     
     <br><br><br><br>
     <div class="buttons">
@@ -103,13 +103,13 @@ if ( clockSimu ) {
     setTimeout(clockDup,1000)
     var cloneMore = 300
     function clockDup() {
-        for ( ele of document.querySelectorAll('[clockelement]')) {
+        for ( ele of document.querySelectorAll('[data-clockfmt]')) {
             ele.addEventListener("clockShown", function(e) {
                 if ( --cloneMore <= 0 ) return
                 let clone = e.target.cloneNode(true)
                 clone.classList.add('clone')
-                // clone.setAttribute('clonedclockelement',e.target.getAttribute('clockelement'))
-                // clone.removeAttribute('clockelement')
+                // clone.setAttribute('cloneddata-clockfmt',e.target.getAttribute('data-clockfmt'))
+                // clone.removeAttribute('data-clockfmt')
                 e.target.parentNode.appendChild(clone)
             })
         }

@@ -1,9 +1,9 @@
 
-[clockelement]:has(>.ccontainer) div {
+[data-clockfmt]:has(>.ccontainer) div {
     display : inline-block;
 }
 
-[clockelement] {
+[data-clockfmt] {
     align-content: center;
 }
 
@@ -24,7 +24,7 @@
     visibility: hidden;
 }
 
-[clockelement] .cval.outdated,[clockelement] .cval.vanish,[clockelement] .cval.free {
+[data-clockfmt] .cval.outdated,[data-clockfmt] .cval.vanish,[data-clockfmt] .cval.free {
     color:transparent;
     border-color: transparent;
     background-color: transparent;
@@ -32,7 +32,7 @@
 .cval.outdated { top:  2em; }
 .cval.vanish   { top: -2em; }
 .cval.free     { top: -2em; }
-[clockelement] .cval.free {
+[data-clockfmt] .cval.free {
     visibility:hidden;
     transition:none;
 }
