@@ -207,7 +207,6 @@ langDict['de'] = {
     ],
 }
 
-/**
 
 function langSpecFetch(lang) {
     let langSpec = langDict[lang]
@@ -259,6 +258,8 @@ function tSpecFindMatching(tSpec,curValue) {
     }
     return 'no matching spec for ${curValue}/${tSpec}'
 }    
+
+/**
 
 function tspecText(tSpecList,specName,value) {
     const m = specName.match(/^([a-zA-Z\.]+)(\d*)([+-/%]?)(\d*)$/)
@@ -393,7 +394,7 @@ document.addEventListener("DOMContentLoadedxx", function() {
     </style>
 </head>
 <body>
-    <h1>Uhr/zeit</h1>
+    <h1>Uhr+zeit</h1>
     <div data-clockfmt="de"></div>
     <div data-clockfmt="de.s"></div>
     <div data-clockfmt="it" later="1"></div>
