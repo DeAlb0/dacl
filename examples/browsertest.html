@@ -282,6 +282,8 @@ function tspecText(tSpecList,specName,value) {
     if ( curValue === 20 ) {
         // console.log(`tspecText(${tSpecList},${specName},${value})`)
     }
+} /**
+
     let v1 = m[2] === '' ? curValue : parseInt(m[2])
     let v2 = m[4] === '' ? curValue : parseInt(m[4])
     switch ( m[3] ) {
@@ -304,7 +306,6 @@ function tspecText(tSpecList,specName,value) {
     return resultText
 }
 
-/**
 
 function clockGeneric(ele,langfield) {
     let mytime = new Date( clockTime().getTime() - parseFloat(ele.getAttribute('later') ?? '0')*1000 )
@@ -394,7 +395,7 @@ document.addEventListener("DOMContentLoadedxx", function() {
     </style>
 </head>
 <body>
-    <h1>Uhr#zeit</h1>
+    <h1>Uhr split zeit</h1>
     <div data-clockfmt="de"></div>
     <div data-clockfmt="de.s"></div>
     <div data-clockfmt="it" later="1"></div>
