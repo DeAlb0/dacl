@@ -260,7 +260,7 @@ function tSpecFindMatching(tSpec,curValue) {
 }    
 
 function tspecText(tSpecList,specName,value) {
-    const m = specName.match(/^([a-zA-Z\.]+)(\d*)([+-\/%]?)(\d*)$/)
+    // const m = specName.match(/^([a-zA-Z\.]+)(\d*)([+-\/%]?)(\d*)$/)
     let name = m[1] ?? specName
     if ( mname = name.match(/([^\.]+)\.(.+)/) ) {
         tSpecList = langSpecFetch(mname[1])
@@ -280,7 +280,7 @@ function tspecText(tSpecList,specName,value) {
         }
     }
     if ( curValue === 20 ) {
-        console.log(`tspecText(${tSpecList},${specName},${value})`)
+        // console.log(`tspecText(${tSpecList},${specName},${value})`)
     }
     let v1 = m[2] === '' ? curValue : parseInt(m[2])
     let v2 = m[4] === '' ? curValue : parseInt(m[4])
@@ -294,7 +294,7 @@ function tspecText(tSpecList,specName,value) {
     }
     const tSpec = tSpecList[name]
     if ( tSpec === undefined ) {
-        return `field ${name} does not exist`
+        // return `field ${name} does not exist`
     }
     let resultText = tSpecFindMatching(tSpec,curValue)
     resultText = resultText.replace(/\{([^}]+)\}/g,function (m,p1) {
