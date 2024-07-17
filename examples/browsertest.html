@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browser test</title>
+<meta charset="utf-8">
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let ele
+        for ( ele of document.querySelectorAll('[data-clockfmt]')) {
+            ele.innerHTML = `this is the data-clockfmt=${ele.getAttribute('data-clockfmt')} element`
+        }
+    })
+</script>
+ <style>
+    .cword {
+        min-width: 110px;
+    }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 45px;
+            margin : 1vw;
+            background-color: grey;
+            background-image: url('https://dealb0.github.io/cmedia/img/20240519_184448_fhds.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+        .cval {
+            border-width: 2px;
+            border-color: lightcoral;
+            border-style: solid;
+            border-radius: 0.2em;
+            padding: 0em 0.2em;
+            background-color: bisque;
+            background-color: #ffe4c4c0;
+            /*** designed with https://matthewlein.com/tools/ceaser **/
+            transition-timing-function: cubic-bezier(0.640, 1.610, 0.605, 1.085); /* custom */
+            opacity: 0.7;
+        }
+        [data-clockfmt="fr"] .cval {
+            background-color: cadetblue;
+        }
+        [data-clockfmt="de"] .cval {
+            background-color:lightcoral;
+        }
+        [data-clockfmt="de"] {
+            display: inline-block;
+        }
+
+        [data-clockfmt="de.s"] {
+            font-size: 20px;
+            display: inline-block;
+            height: 2em;
+        }
+        [data-clockfmt="de.s"] .cval:is(.latest,.outdated) {
+            transition: 1.2s;
+        }
+        [data-clockfmt="de.s"] .cval.latest {
+            background-color: #a0a0a0a0;
+            border-color: #703030;
+            border-width: 1px;
+        }
+        [data-clockfmt="de.s"] .cword {        
+            min-width: 50px;
+        }
+        [data-clockfmt] {
+            height: 3.0em
+        }
+        a {
+            all: unset;
+        }
+        [data-clockfmt="de.s"] .ccontainer1,[data-clockfmt="de.s"] .ccontainer2 {
+            display: none !important;
+        }
+        h1 {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Uhrzeit</h1>
+    <div data-clockfmt="de"></div>
+    <div data-clockfmt="de.s"></div>
+    <div data-clockfmt="it" later="1"></div>
+    <div data-clockfmt="fr" later="2"></div>
+
+    <noscript>
+      <span class="cval">Enable javascript to show time here</span>
+      </noscript>
+ </body>
+ </html>
+    
