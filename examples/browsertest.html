@@ -259,8 +259,6 @@ function tSpecFindMatching(tSpec,curValue) {
     return 'no matching spec for ${curValue}/${tSpec}'
 }    
 
-/**
-
 function tspecText(tSpecList,specName,value) {
     const m = specName.match(/^([a-zA-Z\.]+)(\d*)([+-/%]?)(\d*)$/)
     let name = m[1] ?? specName
@@ -305,6 +303,8 @@ function tspecText(tSpecList,specName,value) {
     console.log(`tspecText(${specName}) returns ${resultText}`)
     return resultText
 }
+
+/**
 
 function clockGeneric(ele,langfield) {
     let mytime = new Date( clockTime().getTime() - parseFloat(ele.getAttribute('later') ?? '0')*1000 )
@@ -394,7 +394,7 @@ document.addEventListener("DOMContentLoadedxx", function() {
     </style>
 </head>
 <body>
-    <h1>Uhr+zeit</h1>
+    <h1>Uhr++zeit</h1>
     <div data-clockfmt="de"></div>
     <div data-clockfmt="de.s"></div>
     <div data-clockfmt="it" later="1"></div>
