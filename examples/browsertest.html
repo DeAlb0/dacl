@@ -207,121 +207,6 @@ langDict['de'] = {
     ],
 }
 
-function langSpecFetch(lang) {
-    let langSpec = langDict[lang]
-    // TODO: check if lang is a url and fetch related .json document and return result
-    return langSpec
-}
-
-function tSpecFindMatching(tSpec,curValue) {
-    let lastSpecValue = 0
-    for ( let specline of tSpec ) {
-        let fit, textpart, specValue, operator, op2
-        let m = specline.match(/^([^:]*):(.*)/)
-        if ( m ) {
-            let spec = m[1]
-            textpart = m[2]
-            let smx
-            if ( smx = spec.match(/^([><])(\d+)$/) ) {
-                operator = smx[1]
-                specValue = parseInt(smx[2])
-            } else if ( smx = spec.match(/^(\d+)(%)(\d+)$/) ) {
-                operator = smx[2]
-                specValue = parseInt(smx[1])
-                op2 = parseInt(smx[3])
-            } else if ( smx = spec.match(/^(\d+)$/) ) {
-                operator = '='
-                specValue = parseInt(m[1])
-            } else if ( spec === '*' ) {
-                return textpart
-            } else {
-                return `unknown spec ${spec}`
-            }
-        } else {
-            specValue = lastSpecValue
-            operator = '='
-            textpart = specline
-        }
-        switch ( operator ) {
-            case '>' : fit = curValue  >  specValue ; break
-            case '<' : fit = curValue  <  specValue ; break
-            case '=' : fit = curValue === specValue ; break
-            case '%' : fit = ( curValue % op2 ) === specValue ; break
-            default :
-            return `invalid check operator ${operator}`
-        }
-        if ( fit ) {
-            return textpart
-        }
-        lastSpecValue = specValue + 1
-    }
-    return 'no matching spec for ${curValue}/${tSpec}'
-}    
-
-function tspecText(tSpecList,specName,value) {
-    const m = specName.match(/^([a-zA-Z\.]+)(\d*)([+-/%]?)(\d*)$/)
-    let name = m[1] ?? specName
-    if ( mname = name.match(/([^\.]+)\.(.+)/) ) {
-        tSpecList = langSpecFetch(mname[1])
-        name = mname[2]
-    } else if ( tSpecList === null ) {
-        tSpecList = langSpecFetch(name)
-        name = 'time'
-    }
-    let subValue = undefined
-    let curValue = value
-    if ( typeof(value) === 'object' ) {
-        switch ( name.charAt(0).toLowerCase()) {
-            case 'h' : curValue  = value.getHours()   ; break
-            case 'm' : curValue  = value.getMinutes() ; break
-            case 's' : curValue  = value.getSeconds() ; break
-            case 't' : curValue  = value.getMinutes() ; subValue = value ; break
-        }
-    }
-    if ( curValue === 20 ) {
-        console.log(`tspecText(${tSpecList},${specName},${value})`)
-    }
-    let v1 = m[2] === '' ? curValue : parseInt(m[2])
-    let v2 = m[4] === '' ? curValue : parseInt(m[4])
-    switch ( m[3] ) {
-        case '-' : curValue = v1 - v2 ; break
-        case '+' : curValue = v1 + v2 ; break
-        case '%' : curValue = v1 % v2 ; break
-        case '/' : curValue = Math.floor(v1 / v2) ; break
-        case ''  : break
-        default : return 'invalid op ' + m[2] ; break
-    }
-    const tSpec = tSpecList[name]
-    if ( tSpec === undefined ) {
-        return `field ${name} does not exist`
-    }
-    let resultText = tSpecFindMatching(tSpec,curValue)
-    resultText = resultText.replace(/\{([^}]+)\}/g,function (m,p1) {
-        return tspecText(tSpecList,p1,subValue ?? curValue)
-    })
-    console.log(`tspecText(${specName}) returns ${resultText}`)
-    return resultText
-}
-
-function clockGeneric(ele,langfield) {
-    let mytime = new Date( clockTime().getTime() - parseFloat(ele.getAttribute('later') ?? '0')*1000 )
-    let result = tspecText(null,langfield,mytime)
-    result = result.replace(/(\|[^-]*)-([^-]*\|)/,'$1$2')  // remove dash in hour name (un-dici)
-    clockTextAnimate(ele,result)    
-}
-
-clockTimeStep()
-clockTimeStep()
-document.addEventListener("DOMContentLoaded", function() {
-        let ele
-        for ( ele of document.querySelectorAll('[data-clockfmt]')) {
-            let mytime = new Date( clockTime().getTime() - parseFloat(ele.getAttribute('later') ?? '0')*1000 )
-            let result = tspecText(null,ele.getAttribute('data-clockfmt'),mytime)
-            ele.innerHTML = `clockfmt ${ele.getAttribute('data-clockfmt')} : ${result} element`
-        }
-    })
-
-
 
 
 </script>
@@ -393,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function() {
     </style>
 </head>
 <body>
-    <h1>Uhr/zeit</h1>
+    <h1>Uhr+zeit</h1>
     <div data-clockfmt="de"></div>
     <div data-clockfmt="de.s"></div>
     <div data-clockfmt="it" later="1"></div>
